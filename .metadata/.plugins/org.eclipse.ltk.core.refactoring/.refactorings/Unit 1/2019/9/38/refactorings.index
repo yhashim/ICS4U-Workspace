@@ -1,0 +1,8 @@
+1568645574568	Rename type 'IntegerArrayStack'
+1568645810189	Rename type 'IntegerStack'
+1568645822138	Rename type 'Stack'
+1568816625308	Rename package 'com.bayviewglen.ds1'
+1568937085230	Encapsulate field 'x'
+1568937090108	Encapsulate field 'y'
+1568989985796	Encapsulate field 'manyItems'
+1569026725523	Delete element

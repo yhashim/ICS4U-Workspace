@@ -1,0 +1,14 @@
+package DataStructuresAssignment;
+
+public class Queen {
+	
+	static int n;
+	static int[][] board;
+	
+	public static void setN(int n1) {
+		n = n1;
+	}
+	public static void solve() {
+		
+	}
+}

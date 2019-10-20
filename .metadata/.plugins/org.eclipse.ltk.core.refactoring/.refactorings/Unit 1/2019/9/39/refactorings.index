@@ -1,0 +1,10 @@
+1569335243689	Delete element
+1569335319830	Rename type 'PostFixDriver'
+1569444449784	Delete element
+1569444703392	Delete element
+1569508774604	Rename type 'IntTreeNode'
+1569508792794	Rename type 'BinaryTreeNode'
+1569508841916	Encapsulate field 'data'
+1569508851913	Encapsulate field 'leftChild'
+1569508856347	Encapsulate field 'rightChild'
+1569510051713	Move file

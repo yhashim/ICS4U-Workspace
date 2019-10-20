@@ -1,0 +1,10 @@
+package DataStructuresAssignment;
+
+public class NQueensDriver {
+
+	public static void main(String[] args) {
+		
+
+	}
+
+}

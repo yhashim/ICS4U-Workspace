@@ -1,0 +1,23 @@
+package DataStructuresAssignment;
+
+public class NQueensHopefullyGood {
+	static int n;
+	static int[][] board;
+	static int rowsFilled;
+	
+	public static void setN(int n1) {
+		n = n1;
+		rowsFilled = 0;
+		board = new int[n][n];
+		solveNQ();
+	}
+
+	private static void solveNQ() {
+		Queen queen = new Queen(0,0);
+		QueenCoordsStack stack = new QueenCoordsStack();
+		stack.push(queen);
+		board[0][0] = 1;
+		
+	}
+	
+}

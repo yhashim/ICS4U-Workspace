@@ -1,0 +1,15 @@
+package DataStructuresAssignment;
+
+public class NQueensHopefullyGood {
+	static int n;
+	static int[][] board;
+	static int rowsFilled;
+	
+	public static void setN(int n1) {
+		n = n1;
+		rowsFilled = 0;
+		board = new int[n][n];
+		solveNQ();
+	}
+	
+}

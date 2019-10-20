@@ -1,0 +1,43 @@
+package DataStructuresAssignment;
+
+public class NQueensHopefullyGood {
+	static int n;
+	static int[][] board;
+	static int rowsFilled;
+	
+	public static void setN(int n1) {
+		n = n1;
+		rowsFilled = 0;
+		board = new int[n][n];
+		solveNQ();
+	}
+
+	private static void solveNQ() {
+		Queen queen = new Queen(0,0);
+		QueenCoordsStack stack = new QueenCoordsStack();
+		stack.push(queen);
+		// board[0][0] = 1;
+		rowsFilled++;
+		int col = 0;
+		while (rowsFilled < n) {
+			Queen q = new Queen(rowsFilled, col);
+			if (!conflict(q, stack)) {
+				stack.push(q);
+				rowsFilled++;
+				col = 0;
+			} else if (col+1<n) {
+				col++;
+			} else {
+				Queen k = stack.pop();
+				rowsFilled--;
+				col--;
+			}
+		}
+	}
+
+	private static boolean conflict(Queen q, QueenCoordsStack stack) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+}

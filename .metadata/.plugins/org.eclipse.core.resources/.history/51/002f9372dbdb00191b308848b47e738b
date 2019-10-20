@@ -1,0 +1,7 @@
+package DataStructuresAssignment;
+
+public class NQueensHopefullyGood {
+	static int n;
+	static int[][] board;
+	static int rowsFilled;
+}

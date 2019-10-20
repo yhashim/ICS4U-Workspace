@@ -1,0 +1,8 @@
+package DataStructuresAssignment;
+
+public class Queen {
+	static int n;
+	public void setN(int n1) {
+		this.n = n1;
+	}
+}
