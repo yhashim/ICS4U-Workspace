@@ -1,8 +1,12 @@
+function main(){
+	// die 
+}
+
 function intN() {
     var input = document.getElementById("userInput").value;
     var yFilled = 0;
     if (input>0){
-	    console.log("Generating an " + input + " by " + input + " chess board with " + input + " queens...");
+	    console.log("Generating a " + input + " by " + input + " chess board with " + input + " queens...");
 	    solveNQ(input, yFilled);
 	} else {
 		console.log("No solution possible.");
@@ -35,6 +39,8 @@ function solveNQ(input, yFilled) {
             }
             if (isEmpty(queenCoordsStack)) {
                 console.log("No solution possible for n = " + n);
+                main();
+                // end code here somehow
             }
             var fix = queenCoordsStack.pop();
             x = fix.x + 1;
