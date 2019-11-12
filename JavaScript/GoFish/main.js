@@ -1,19 +1,19 @@
 const NUM_SUITS = 4;
 const NUM_FACES = 13;
 const PLAY = 1;
-const NUM_PLAYERS = 3;
 const NUM_CARDS = 5;
 
 function init() {
     var gameDone = false;
+    var numPlayers = 0; // get from HTML pg how many wanted by player
     while (!gameDone) {
         var player = {};
-        player.name = "You";
+        player.name = "You"; // get from HTML player's name
         player.hand = [];
         player.numCards = 0;
         player.points = 0;
         var cps = [];
-        for (var i = 0; i < NUM_PLAYERS; i++) {
+        for (var i = 0; i < numPlayers; i++) {
             cps[i] = {};
             cps[i].name = "cp" + i;
             cps[i].hand = ["X", "X", "X", "X", "X"];
@@ -25,7 +25,7 @@ function init() {
             player.hand[i] = card;
             player.numCards++;
         }
-        for (var i = 0; i < NUM_PLAYERS) {
+        for (var i = 0; i < numPlayers) {
             console.log(cps[i].name + " " + cps[i].hand);
         }
         console.log(player.name + player.hand);
@@ -42,7 +42,7 @@ function init() {
             numWant = getNumWant();
             cpWant = getCPWant();
             if (contain(cpWant, numWant)) {
-              for (var i = 0; i<NUM_PLAYERS; i++){
+              for (var i = 0; i<numPlayers; i++){
                 if (cps[i].name==cpWant){
                   
                 }
