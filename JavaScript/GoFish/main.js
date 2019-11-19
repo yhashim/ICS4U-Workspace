@@ -2,84 +2,201 @@ const NUM_FACES = 13;
 const PLAY = 1;
 const NUM_CARDS = 5;
 const WIN_PTS = 10;
-var cards = {};
+
+var traits = []
+    traits[0] = function IQ1000GOD(){
+        // knows everyone's cards and who has what
+        // always gets what they want
+    };
+    traits[1] = function BULLY(){
+        // targets the player only
+    };
+    traits[2] = function VEGETABLE(){
+        // only asks for cards they don't have themselves
+        // asks whoever doesn't have the card they want for it
+    };
+var cards = [];
+var CPUs = [];
 
 function init() {
     loadAllImgs();
     var gameDone = false;
-    var numPlayers = 0; // get from HTML pg how many wanted by player
-    // set up player
-    var player = {};
-    player.name = "You"; // get from HTML player's name
-    player.hand = [];
-    player.numCards = 0;
-    player.points = 0;
-    for (var i = 0; i < NUM_CARDS; i++) {
-        var card = getCard();
-        player.hand[i] = card;
-        player.numCards++;
-    }
-    // set up CPS
-    var cps = [];
-    for (var i = 0; i < numPlayers; i++) {
-        cps[i] = {};
-        cps[i].name = "cp" + i;
-        cps[i].hand = ["X", "X", "X", "X", "X"];
-        cps[i].hiddenHand = [];
-        cps[i].numCards = 0;
-        cps[i].points = 0;
-        cps[i].trait = getRandomTrait();
-    }
-    for (var i = 0; i < numPlayers) {
-        for (var i = 0; i < NUM_CARDS; i++) {
-            var card = getCard();
-            cps[i].hiddenHand[i] = card;
-            cps[i].numCards++;
-        }
-        while (pairs(cps[i].hand) == true) {
-            removePairs(cps[i].hand);
-            cps[i].numCards -= 2;
-            console.log("Pairs removed.");
-            cps[i].hand = [null, null, null, null, null];
-            for (var i = 0; i < cps[i].numCards; i++) {
-                cps[i].hand[i] = "X";
-            }
-            console.log(cps[i].name + " " + cps[i].hand);
-            player.points++;
-            console.log("Points: " + player.points);
-        }
-    }
-    while (!gameDone) {
-        console.log(player.name + player.hand);
-        while (pairs(player.hand) == true) {
-            removePairs(player.hand);
-            player.numCards -= 2;
-            console.log("Pairs removed.");
-            console.log("Hand: " + player.hand);
-            player.points++;
-            console.log("Points: " + player.points);
-        }
-        var turn = 0;
-        while (turn == 0) {
-            numWant = getNumWant();
-            cpWant = getCPWant();
-            if (contain(cpWant, numWant)) {
-                for (var i = 0; i < numPlayers; i++) {
-                    if (cps[i].name == cpWant) {
+    var numPlayers = document.getElementByID(playersWanted)-1; // get from HTML pg how many wanted by player - 2, 3 or 4   
+    for (var i = 0; i<numPlayers; i++){
+        var trait = traits[Math.floor(Math.random() * traits.length)];
+        CPUs[i] = new CPU(i, trait);
+    } 
+    play(player, cps, gameDone);
+}
 
-                    }
+class Player {
+    constructor(){
+        this.name = "You";
+        this.hand = new Hand(this);
+        this.points = 0;
+        this.target;
+        this.cardNumWanted;
+    }
+    getPoints(){
+        return this.points;
+    }
+    setTarget(number){
+        this.target = number;
+    }
+    getTarget(){
+        return target;
+    }
+    setCardWanted(number){
+        this.cardNumWanted = number;
+    }
+    getCardWanted(){
+        return cardNumWanted;
+    }
+    recieveCard(card){
+        this.hand.addCard(card);
+        if (this.hand.hasPairs()){
+            checkPairs(this.hand);
+        }
+    }
+    cardInHand(card){
+        return this.hand.cardPresent(card);
+    }
+    giveCard(number){
+        // put it in the CPU#'s hand
+        this.hand.removeCard();
+    }
+    isHandEmpty(){
+        return this.hand.size == 0;
+    }
+    refillHand(){
+        if (this.hand.isHandEmpty()){
+            for(var i = 0; i<NUM_CARDS; i++){
+                drawCard();
+            }
+        }
+    }
+    drawCard(){
+        // once player clicks on a card
+        //while (//still no click){
+            // wait
+        //}
+        this.hand.addCard(cards[Math.floor(Math.random()*cards.size)]);
+        // player can pick up a card from the messed up pile
+        // this is for when the player has to go fish
+        // also for when player must refill hand
+    }
+}
+
+class CPU {
+    constructor(number, trait){
+        this.name = "CPU" + number;
+        this.trait = trait;
+        this.hand = new Hand(this);
+        this.points = 0;
+        this.target;
+        this.cardNumWanted;
+    }
+}
+
+class Card {
+    constructor(number, suit){
+        this.number = number;   
+        this.suit = suit;
+        this.name = suit+number;
+    }
+    getCardName(){
+        return this.name;
+    }
+    getCardNumber(){
+        return this.number;
+    }
+    draw(x, y, visibility){
+        // if visibility
+            // image = image of card
+        // if !visibility
+            // image = image of back of card
+        // print out card at coords on canvas
+    }
+}
+
+class Hand {
+    constructor(player){
+        this.hand = [];
+        this.size = 0;
+        this.player = player;
+    }
+    cardPresent(card){
+        // iterate through hand
+        // return true if hand contains card
+    }
+    addCard(card){
+        // iterate through
+        // add card to the hand
+        this.size++;
+    }
+    removeCard(card){
+        // iterate through
+        // remove card from hand
+        this.size--;
+    }
+    hasPairs(){
+        for (var i = 0; i<this.size; i++){
+            for (var j = i+1; j<this.size; j++){
+                if(hand[i]==hand[j]){
+                    return true;
                 }
             }
-            turn++;
         }
-        for (var i = turn-1; i<numPlayers; i++){
-            if (cps[i].trait == bully){
+        return false;
+    }
+    findMatches(){
+        // iterate through
+        // return matches and keep indeces of first and second match
+        // delete them
+        // add 1 point
+        // repeat until no matches
+        checkPairs(hand, hand.getPlayer);
+    }
+    draw(){
+        // draw each individual card
+        // iterate through
+        // call each card's draw
+    }
+}
 
-            } else if (cps[i].trait == kookoo){
-
-            } else if (cps[i].trait == IQinfinity){
-
+function checkPairs(hand, player){
+    if (!hand.hasPairs){
+        return;
+    } else {
+        for (var i = 0; i<hand.size; i++){
+            for (var j = i+1; j<hand.size; j++){
+                if (hand[i]==hand[j]){
+                    var oldHand = hand;
+                    var newHand = [];
+                    hand[i] = null;
+                    hand[j] = null;
+                    var l = 0;
+                    for (var k = 0; k<hand.size; k++){
+                        if (hand[k] != null){
+                            newHand[l] = hand[k];
+                            l++;
+                        }
+                    }
+                    hand = newHand;
+                    hand.size -= 2;
+                    player.points++;
+                    checkPairs(hand, player);
+                }
             }
+        }
+    }
+}
+
+function play(player, cps, gameDone){
+    while (!gameDone) {
+        player.go();
+        for (var i = 0; i<numPlayers; i++){
+            CPUs[i].go();
         }
     }
 }
@@ -132,7 +249,7 @@ function loadAllImgs() {
 }
 
 function getCard() {
-    var x = Math.floor(Math.radnom() * NUM_FACES + 2);
+    var x = Math.floor(Math.random() * NUM_FACES + 2);
     if (x <= 10) {
         return "" + x;
     } else if (x == 11) {
@@ -144,31 +261,4 @@ function getCard() {
     } else {
         return "A";
     }
-}
-
-function checkPairs(hand) {
-    // check for pairs in a hand
-    // return true if there is a pair
-}
-
-function removePairs(hand) {
-    // delete a pair from the hand
-}
-
-function getNumWant() {
-    // ask player what num they are searching for
-}
-
-function getCPWant() {
-    // ask player which CP they want to ask
-}
-
-function contain(cpWant, numWant) {
-    // check if CP# has the num the player asked for
-    // return true if yes, false otherwise
-}
-
-function display(player, cps) {
-    // display player's cards up on the bottom of the screen
-    // display cps as just their #cards turned upside down
 }
