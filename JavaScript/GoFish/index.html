@@ -5,11 +5,12 @@
       <link rel="stylesheet" type="text/css" href="style.css">
       <script src='main.js'></script>
     </head>
-    <body onload="init()">
+    <body>
       <div id="game">
-<!--         <canvas id="background" width="1000" height="700">
-          Your browser does not support canvas. Please try again with a different browser.
-        </canvas> -->
+        <canvas id="myCanvas" width="1024" height="485">
+        Your browser does not support the HTML5 canvas tag.
+        </canvas>
+        <p onload="init(myCanvas)"> </p>
       </div>
     </body>
 </html>

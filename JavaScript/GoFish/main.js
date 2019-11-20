@@ -18,8 +18,15 @@ var traits = []
 var cards = [];
 var CPUs = [];
 
-function init() {
+var canvas; 
+var ctx;
+var backgroundImg;
+
+function init(elem) {
+    canvas = document.getElementById(elem); 
+    ctx = canvas.getContext("2d");
     loadAllImgs();
+    ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
     var gameDone = false;
     var numPlayers = document.getElementByID(playersWanted)-1; // get from HTML pg how many wanted by player - 2, 3 or 4   
     for (var i = 0; i<numPlayers; i++){
@@ -194,14 +201,21 @@ function checkPairs(hand, player){
 
 function play(player, cps, gameDone){
     while (!gameDone) {
-        player.go();
+        go(player);
         for (var i = 0; i<numPlayers; i++){
-            CPUs[i].go();
+            go(CPUs[i]);
         }
     }
 }
 
+function go(person){
+    // get input
+    // set person's target and number    
+}
+
 function loadAllImgs() {
+    backgroundImg = new Image();
+    backgroundImg.src = "images/contemporary_china_2.png";
     for (var i = 2; i <= 10; i++) {
         var img = new Image();
         img.src = "images/cards/clubs" + i + ".png";
