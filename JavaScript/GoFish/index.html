@@ -3,14 +3,54 @@
     <head>
       <title>GoFish JS</title>
       <link rel="stylesheet" type="text/css" href="style.css">
-      <script src='main.js'></script>
+     
     </head>
-    <body>
+    <body onload="init('myCanvas');">
       <div id="game">
-        <canvas id="myCanvas" width="1024" height="485">
+        <canvas id="myCanvas" width="1350" height="781">
         Your browser does not support the HTML5 canvas tag.
         </canvas>
-        <p onload="init('myCanvas')"></p>
+        <h1 id="title">Go Fish!</h1>
+        <button id="b1" class="button" style="left: 20%;" onclick="begin(2)">2 players</button>
+        <button id="b2" class="button" style="left: 45%;" onclick="begin(3)">3 players</button>
+        <button id="b3" class="button" style="right: 20%;" onclick="begin(4)">4 players</button>
       </div>
+      <script src='main.js'></script>
+      <style>
+        h1 {
+          display: block;
+          position: absolute;
+          top: 20%;
+          left: 39.5%;
+          color: white;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 75px;
+        }
+        .button {
+          display: block;
+          position: absolute;
+          top: 46%;
+          background-color: black; 
+          border: none;
+          color: white;
+          padding: 16px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          -webkit-transition-duration: 0.4s; 
+          transition-duration: 0.4s;
+          cursor: pointer;
+          color: white; 
+          border-radius: 4px;
+          box-shadow: 0 5px 8px 0 rgba(0,0,0,0.16), 0 5px 13px 0 rgba(0,0,0,0.12);
+        }
+        .button:hover {
+            background-color: white;
+            color: #870000;
+        }
     </body>
 </html>

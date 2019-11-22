@@ -23,19 +23,79 @@ var ctx;
 var backgroundImg;
 
 function init(elem) {
+    loadAllImgs();
     canvas = document.getElementById(elem); 
     ctx = canvas.getContext("2d");
-    loadAllImgs();
-    ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#870000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    clientRect = canvas.getBoundingClientRect();
+    document.addEventListener('mousemove', e => {
+        mouseX = e.clientX - clientRect.left;
+        mouseY = e.clientY - clientRect.top;
+    });
+    document.addEventListener('mousedown', e => {
+        mouseDown = true;
+    });
+    document.addEventListener('mouseup', e => {
+        mouseDown = false;
+    });
+}
+
+function begin(num) {
+    document.getElementById("title").style.display = 'none';
+    document.getElementById("b1").style.display = 'none';
+    document.getElementById("b2").style.display = 'none';
+    document.getElementById("b3").style.display = 'none';
     var gameDone = false;
-    var numPlayers = document.getElementByID(playersWanted)-1; // get from HTML pg how many wanted by player - 2, 3 or 4   
+    var numPlayers = num-1; // get from HTML pg how many wanted by player - 2, 3 or 4   
     for (var i = 0; i<numPlayers; i++){
-        var trait = traits[Math.floor(Math.random() * traits.length)];
+        var trait = traits[Math.floor(Math.random()*traits.length)];
         CPUs[i] = new CPU(i, trait);
     } 
+    draw();
     play(player, cps, gameDone);
 }
 
+function draw() {
+    // if game oveer
+        // return;
+    // else
+        // do drawy stuff
+        // draw player at bottom of screen
+        // draw cpus
+            // draw them based on num cpus
+    window.requestAnimationFrame(draw);
+}
+
+// function getMousePos(canvas, event) {
+//     var rect = canvas.getBoundingClientRect();
+//     return {
+//         x: event.clientX - rect.left,
+//         y: event.clientY - rect.top
+//     };
+// }
+
+// //Function to check whether a point is inside a rectangle
+// function isInside(pos, rect){
+//     return pos.x > rect.x && pos.x < rect.x+rect.width && pos.y < rect.y+rect.height && pos.y > rect.y
+// }
+
+// //The rectangle should have x,y,width,height properties
+// var rect = {
+//     x:250,
+//     y:350,
+//     width:200,
+//     height:100
+// };
+
+//Binding the click event on the canvas
+/*canvas.addEventListener('click', function(evt) {
+    var mousePos = getMousePos(canvas, evt);
+    if (isInside(mousePos,rect)) {
+        return true;
+    }  
+}, false);
+*/
 class Player {
     constructor(){
         this.name = "You";
