@@ -215,7 +215,7 @@ function go(person){
 
 function loadAllImgs() {
     backgroundImg = new Image();
-    backgroundImg.src = "images/contemporary_china_2.png";
+    backgroundImg.src = "images/bg2.png";
     for (var i = 2; i <= 10; i++) {
         var img = new Image();
         img.src = "images/cards/clubs" + i + ".png";
