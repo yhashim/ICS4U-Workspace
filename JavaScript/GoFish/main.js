@@ -17,10 +17,17 @@ var traits = []
     };
 var cards = [];
 var CPUs = [];
+var numPlayers;
 
-var canvas; 
-var ctx;
+var canvas, ctx;
 var backgroundImg;
+
+var turn = 0;
+var mouseX = 0, mouseY = 0, mouseDown = false;
+var clientRect;
+
+var gameDone = false;
+
 
 function init(elem) {
     loadAllImgs();
@@ -46,14 +53,13 @@ function begin(num) {
     document.getElementById("b1").style.display = 'none';
     document.getElementById("b2").style.display = 'none';
     document.getElementById("b3").style.display = 'none';
-    var gameDone = false;
-    var numPlayers = num-1; // get from HTML pg how many wanted by player - 2, 3 or 4   
+    numPlayers = num-1; // get from HTML pg how many wanted by player - 2, 3 or 4   
     for (var i = 0; i<numPlayers; i++){
         var trait = traits[Math.floor(Math.random()*traits.length)];
         CPUs[i] = new CPU(i, trait);
     } 
     draw();
-    play(player, cps, gameDone);
+    play(player, cps);
 }
 
 function draw() {
@@ -163,6 +169,66 @@ class CPU {
         this.target;
         this.cardNumWanted;
     }
+    getPoints(){
+        return this.points;
+    }
+    setTarget(number){
+        if (this.trait == VEGETABLE){
+            
+        } else if (this.trait == BULLY){
+            this.target = 0; // player
+        } else if (this.trait == IQ1000GOD){
+
+        }
+    }
+    getTarget(){
+        return target;
+    }
+    setCardWanted(number){
+        if (this.trait == VEGETABLE){
+            
+        } else if (this.trait == BULLY){
+            this.cardNumWanted = this.hand[Math.floor(Math.random()*this.hand.size)].getCardNumber();
+        } else if (this.trait == IQ1000GOD){
+
+        }
+    }
+    getCardWanted(){
+        return cardNumWanted;
+    }
+    recieveCard(card){
+        this.hand.addCard(card);
+        if (this.hand.hasPairs()){
+            checkPairs(this.hand);
+        }
+    }
+    cardInHand(card){
+        return this.hand.cardPresent(card);
+    }
+    giveCard(number){
+        // put it in the CPU#'s hand
+        this.hand.removeCard();
+    }
+    isHandEmpty(){
+        return this.hand.size == 0;
+    }
+    refillHand(){
+        if (this.hand.isHandEmpty()){
+            for(var i = 0; i<NUM_CARDS; i++){
+                drawCard();
+            }
+        }
+    }
+    drawCard(){
+        // once player clicks on a card
+        //while (//still no click){
+            // wait
+        //}
+        this.hand.addCard(cards[Math.floor(Math.random()*cards.size)]);
+        // player can pick up a card from the messed up pile
+        // this is for when the player has to go fish
+        // also for when player must refill hand
+    }
 }
 
 class Card {
@@ -259,18 +325,42 @@ function checkPairs(hand, player){
     }
 }
 
-function play(player, cps, gameDone){
+function play(player, cps){
+    var winner = checkGame();
     while (!gameDone) {
         go(player);
         for (var i = 0; i<numPlayers; i++){
             go(CPUs[i]);
         }
     }
+    console.log(winner);
+}
+
+function checkGame(){
+    if (player.getPoints()>=10){
+        gameDone = true;
+        return player;
+    } 
+    for (var i = 0; i<CPUs.size; i++){
+        if (CPUs[i].getPoints()>=10){
+            gameDone = true;
+            return CPU[i];
+        }
+    }
+    checkGame();
 }
 
 function go(person){
-    // get input
-    // set person's target and number    
+    int numWant = person.getCardNumWanted();
+    var target = person.getTarget();
+    if (target.getHand.hasCard(numWant)){
+            // ADD GETHAND TO CPU AND PLAYER CLASS
+        // give stuff
+        return;
+    } else {
+        // go fish stuff
+        return;
+    }
 }
 
 function loadAllImgs() {
