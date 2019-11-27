@@ -162,6 +162,7 @@ class Player {
 
 class CPU {
     constructor(number, trait){
+        this.number = number;
         this.name = "CPU" + number;
         this.trait = trait;
         this.hand = new Hand(this);
@@ -174,7 +175,17 @@ class CPU {
     }
     setTarget(number){
         if (this.trait == VEGETABLE){
-            
+            if (!player.cardInHand(card)){
+                // ask player
+            } else {
+                for (var i = 0; i<CPUs.length; i++){
+                    if (!i == this.CPU.number){
+                        if (!CPUs[i].cardInHand(card)){
+                            // ask them
+                        }
+                    }
+                }
+            }
         } else if (this.trait == BULLY){
             this.target = 0; // player
         } else if (this.trait == IQ1000GOD){
