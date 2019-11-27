@@ -53,6 +53,8 @@ function begin(num) {
     document.getElementById("b1").style.display = 'none';
     document.getElementById("b2").style.display = 'none';
     document.getElementById("b3").style.display = 'none';
+    document.getElementById("num").style.display = 'block';
+    document.getElementById("target").style.display = 'block';
     numPlayers = num-1; // get from HTML pg how many wanted by player - 2, 3 or 4   
     for (var i = 0; i<numPlayers; i++){
         var trait = traits[Math.floor(Math.random()*traits.length)];
@@ -66,6 +68,20 @@ function draw() {
     // if game oveer
         // return;
     // else
+    // draw player
+    var i = 10;
+    for (var c in player.getHand()){
+       card = cards[c];
+       ctx.drawImage(card, 5+i, 50, card.width/4, card.height/4);   
+       i += 25; 
+    }
+    for (var i = 0; i<CPUs.size; i++){
+       for (var c in CPUs[i].getHand()){
+           card = cards[c];
+           ctx.drawImage(card, 5+i, 50, card.width/4, card.height/4);   
+           i += 25; 
+        } 
+    }
         // do drawy stuff
         // draw player at bottom of screen
         // draw cpus
@@ -362,16 +378,16 @@ function checkGame(){
 }
 
 function go(person){
-    int numWant = person.getCardNumWanted();
-    var target = person.getTarget();
-    if (target.getHand.hasCard(numWant)){
-            // ADD GETHAND TO CPU AND PLAYER CLASS
-        // give stuff
-        return;
-    } else {
-        // go fish stuff
-        return;
-    }
+    // int numWant = person.getCardWanted();
+    // var target = person.getTarget();
+    // if (target.getHand.hasCard(numWant)){
+    //         // ADD GETHAND TO CPU AND PLAYER CLASS
+    //     // give stuff
+    //     return;
+    // } else {
+    //     // go fish stuff
+    //     return;
+    // }
 }
 
 function loadAllImgs() {
