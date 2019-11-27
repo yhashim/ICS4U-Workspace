@@ -31,7 +31,7 @@ var gameDone = false;
 
 window.onload = function init() {
     loadAllImgs();
-    canvas = document.getElementById(myCanvas); 
+    canvas = document.getElementById("myCanvas"); 
     ctx = canvas.getContext("2d");
     ctx.fillStyle = '#870000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
