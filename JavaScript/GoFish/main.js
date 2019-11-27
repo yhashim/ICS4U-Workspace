@@ -29,13 +29,14 @@ var clientRect;
 var gameDone = false;
 
 
-function init() {
+window.onload = function init() {
     loadAllImgs();
     canvas = document.getElementById(myCanvas); 
     ctx = canvas.getContext("2d");
     ctx.fillStyle = '#870000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     clientRect = canvas.getBoundingClientRect();
+    console.log('test');
     document.addEventListener('mousemove', e => {
         mouseX = e.clientX - clientRect.left;
         mouseY = e.clientY - clientRect.top;

@@ -12,11 +12,11 @@
 
       <div id="game">
 
-        <canvas id="myCanvas" width="1350" height="781">
+        <canvas id="myCanvas" width="1350" height="781" onload="init();">
         Your browser does not support the HTML5 canvas tag.
         </canvas>
 
-        <h1 id="title" onload="init();">Go Fish!</h1>
+        <h1 id="title">Go Fish!</h1>
         <button id="b1" class="button" style="left: 20%;" onclick="begin(2)">2 players</button>
         <button id="b2" class="button" style="left: 45%;" onclick="begin(3)">3 players</button>
         <button id="b3" class="button" style="right: 20%;" onclick="begin(4)">4 players</button>
