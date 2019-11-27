@@ -29,9 +29,9 @@ var clientRect;
 var gameDone = false;
 
 
-function init(elem) {
+function init() {
     loadAllImgs();
-    canvas = document.getElementById(elem); 
+    canvas = document.getElementById(myCanvas); 
     ctx = canvas.getContext("2d");
     ctx.fillStyle = '#870000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
