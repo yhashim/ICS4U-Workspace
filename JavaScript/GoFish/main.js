@@ -23,8 +23,6 @@ var canvas, ctx;
 var backgroundImg;
 
 var turn = 0;
-var mouseX = 0, mouseY = 0, mouseDown = false;
-var clientRect;
 
 var gameDone = false;
 
@@ -35,18 +33,7 @@ window.onload = function init() {
     ctx = canvas.getContext("2d");
     ctx.fillStyle = '#870000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    clientRect = canvas.getBoundingClientRect();
     console.log('test');
-    document.addEventListener('mousemove', e => {
-        mouseX = e.clientX - clientRect.left;
-        mouseY = e.clientY - clientRect.top;
-    });
-    document.addEventListener('mousedown', e => {
-        mouseDown = true;
-    });
-    document.addEventListener('mouseup', e => {
-        mouseDown = false;
-    });
 }
 
 function begin(num) {
@@ -56,7 +43,9 @@ function begin(num) {
     document.getElementById("b3").style.display = 'none';
     document.getElementById("num").style.display = 'block';
     document.getElementById("target").style.display = 'block';
-    document.getElementById("text").style.display = 'block';
+    document.getElementById("text1").style.display = 'block';
+    document.getElementById("text2").style.display = 'block';
+    document.getElementById("ask").style.display = 'block';
 
     numPlayers = num-1; // get from HTML pg how many wanted by player - 2, 3 or 4   
     for (var i = 0; i<numPlayers; i++){
@@ -92,35 +81,6 @@ function draw() {
     window.requestAnimationFrame(draw);
 }
 
-// function getMousePos(canvas, event) {
-//     var rect = canvas.getBoundingClientRect();
-//     return {
-//         x: event.clientX - rect.left,
-//         y: event.clientY - rect.top
-//     };
-// }
-
-// //Function to check whether a point is inside a rectangle
-// function isInside(pos, rect){
-//     return pos.x > rect.x && pos.x < rect.x+rect.width && pos.y < rect.y+rect.height && pos.y > rect.y
-// }
-
-// //The rectangle should have x,y,width,height properties
-// var rect = {
-//     x:250,
-//     y:350,
-//     width:200,
-//     height:100
-// };
-
-//Binding the click event on the canvas
-/*canvas.addEventListener('click', function(evt) {
-    var mousePos = getMousePos(canvas, evt);
-    if (isInside(mousePos,rect)) {
-        return true;
-    }  
-}, false);
-*/
 class Player {
     constructor(){
         this.name = "You";
@@ -132,17 +92,15 @@ class Player {
     getPoints(){
         return this.points;
     }
-    setTarget(number){
-        this.target = number;
+    setCardAndTarg(){
+        this.target = document.getElementById("target");
+        this.cardNumWanted = document.getElementById("num");
     }
     getTarget(){
-        return target;
-    }
-    setCardWanted(number){
-        this.cardNumWanted = number;
+        return this.target;
     }
     getCardWanted(){
-        return cardNumWanted;
+        return this.cardNumWanted;
     }
     recieveCard(card){
         this.hand.addCard(card);
@@ -212,7 +170,7 @@ class CPU {
         }
     }
     getTarget(){
-        return target;
+        return this.target;
     }
     setCardWanted(number){
         if (this.trait == VEGETABLE){
@@ -224,7 +182,7 @@ class CPU {
         }
     }
     getCardWanted(){
-        return cardNumWanted;
+        return this.cardNumWanted;
     }
     recieveCard(card){
         this.hand.addCard(card);
@@ -358,8 +316,10 @@ function checkPairs(hand, player){
 function play(player, cps){
     var winner = checkGame();
     while (!gameDone) {
+        document.getElementById("ask").style.display = 'block';
         go(player);
         for (var i = 0; i<numPlayers; i++){
+            document.getElementById("ask").style.display = 'none';
             go(CPUs[i]);
         }
     }
@@ -381,16 +341,16 @@ function checkGame(){
 }
 
 function go(person){
-    // int numWant = person.getCardWanted();
-    // var target = person.getTarget();
-    // if (target.getHand.hasCard(numWant)){
-    //         // ADD GETHAND TO CPU AND PLAYER CLASS
-    //     // give stuff
-    //     return;
-    // } else {
-    //     // go fish stuff
-    //     return;
-    // }
+    int numWant = person.getCardWanted();
+    var target = person.getTarget();
+    if (target.getHand.hasCard(numWant)){
+            // ADD GETHAND TO CPU AND PLAYER CLASS
+        // give stuff
+        return;
+    } else {
+        // go fish stuff
+        return;
+    }
 }
 
 function loadAllImgs() {

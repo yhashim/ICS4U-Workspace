@@ -21,20 +21,21 @@
         <button id="b2" class="button" style="left: 45%;" onclick="begin(3)">3 players</button>
         <button id="b3" class="button" style="right: 20%;" onclick="begin(4)">4 players</button>
 
-        <p id="text">Number: </p><input type="number" id="num" style="left: 39%" min="1" max="13">
-        <p id="text">Target: </p><input type="number" id="target" style="left: 44%" min="1" max="3">
-      
+        <p id="text1" style="left: 34%">Number: </p><input type="number" id="num" style="left: 39%" min="1" max="13">
+        <p id="text2" style="left: 44%">Target: </p><input type="number" id="target" style="left: 48%" min="1" max="3">
+        <button id="ask" style="display: none;" class="button" style="left: 50%;" onclick="player.setCardAndTarg()">Ask!</button>
+
       </div>
 
       <style>
-        #text {
+        #text1, #text2 {
           display: none;
         }
 
         p {
           display: block;
           position: absolute;
-          top: 90%;
+          top: 87.75%;
           text-align: center;
           -webkit-transition-duration: 0.4s; 
           transition-duration: 0.4s;
