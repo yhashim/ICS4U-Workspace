@@ -56,6 +56,8 @@ function begin(num) {
     document.getElementById("b3").style.display = 'none';
     document.getElementById("num").style.display = 'block';
     document.getElementById("target").style.display = 'block';
+    document.getElementById("text").style.display = 'block';
+
     numPlayers = num-1; // get from HTML pg how many wanted by player - 2, 3 or 4   
     for (var i = 0; i<numPlayers; i++){
         var trait = traits[Math.floor(Math.random()*traits.length)];
