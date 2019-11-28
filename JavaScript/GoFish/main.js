@@ -346,7 +346,7 @@ function checkGame(){
 }
 
 function go(person){
-    int numWant = person.getCardWanted();
+    var numWant = person.getCardWanted();
     var target = person.getTarget();
     if (target.getHand.hasCard(numWant)){
             // ADD GETHAND TO CPU AND PLAYER CLASS
