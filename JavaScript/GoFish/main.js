@@ -2,6 +2,7 @@ const NUM_FACES = 13;
 const PLAY = 1;
 const NUM_CARDS = 5;
 const WIN_PTS = 10;
+const SUITS = ["h", "c", "d", "s"];
 
 var traits = []
     traits[0] = function IQ1000GOD(){
@@ -27,6 +28,7 @@ var turn = 0;
 var gameDone = false;
 var turnStart = false;
 
+var player;
 
 window.onload = function init() {
     loadAllImgs();
@@ -46,11 +48,19 @@ function begin(num) {
     document.getElementById("text1").style.display = 'block';
     document.getElementById("text2").style.display = 'block';
     document.getElementById("ask").style.display = 'block';
-
+    player = new Player();
+    for (var i = 0; i<NUM_CARDS; i++){
+        var randomCard = new Card(Math.floor(Math.random()*13), SUITS[Math.floor(Math.random()*SUITS.size)]);
+        player.recieveCard(randomCard);
+    }
     numPlayers = num-1; // get from HTML pg how many wanted by player - 2, 3 or 4   
     for (var i = 0; i<numPlayers; i++){
-        var trait = traits[Math.floor(Math.random()*traits.length)];
+        var trait = traits[Math.floor(Math.random()*traits.size)];
         CPUs[i] = new CPU(i, trait);
+        for (var i = 0; i<NUM_CARDS; i++){
+            var randomCard = new Card(Math.floor(Math.random()*13), SUITS[Math.floor(Math.random()*SUITS.size)]);
+            player.recieveCard(randomCard);
+        }
     } 
     draw();
     play(player, cps);
@@ -58,19 +68,23 @@ function begin(num) {
 
 function draw() {
     // if game oveer
+        // draw game over in center
         // return;
     // else
     // draw player
     var i = 10;
-    for (var c in player.getHand()){
-       card = cards[c];
-       ctx.drawImage(card, 5+i, 50, card.width/4, card.height/4);   
+    var all = player.getHand();
+    for (var c in all){
+       var card = all[c];
+       console.log(card.getCardNumber());
+       ctx.drawImage(card[card.getCardName()], 5+i, 50, card.width/4, card.height/4);   
        i += 25; 
     }
-    for (var i = 0; i<CPUs.size; i++){
-       for (var c in CPUs[i].getHand()){
-           card = cards[c];
-           ctx.drawImage(card, 5+i, 50, card.width/4, card.height/4);   
+    for (var j = 0; j<CPUs.size; j++){
+        all = CPUs[j].getHand();
+        for (var c in all){
+           var card = all[c];
+           ctx.drawImage(cards[card.getCardName()], 5+i, 50, card.width/4, card.height/4);   
            i += 25; 
         } 
     }
@@ -88,6 +102,9 @@ class Player {
         this.points = 0;
         this.target;
         this.cardNumWanted;
+    }
+    getHand(){
+        return this.hand;
     }
     getPoints(){
         return this.points;
@@ -112,7 +129,7 @@ class Player {
     cardInHand(card){
         return this.hand.cardPresent(card);
     }
-    giveCard(number){
+    giveCard(card){
         // put it in the CPU#'s hand
         this.hand.removeCard();
     }
@@ -148,18 +165,21 @@ class CPU {
         this.target;
         this.cardNumWanted;
     }
+    getHand(){
+        return this.hand;
+    }
     getPoints(){
         return this.points;
     }
     setTarget(number){
         if (this.trait == VEGETABLE){
             if (!player.cardInHand(card)){
-                // ask player
+                this.target = 0;
             } else {
                 for (var i = 0; i<CPUs.length; i++){
-                    if (!i == this.CPU.number){
+                    if (i == this.CPU.number){
                         if (!CPUs[i].cardInHand(card)){
-                            // ask them
+                            this.target = i;
                         }
                     }
                 }
@@ -167,7 +187,17 @@ class CPU {
         } else if (this.trait == BULLY){
             this.target = 0; // player
         } else if (this.trait == IQ1000GOD){
-
+            if (player.cardInHand(card)){
+                this.target = 0;
+            } else {
+                for (var i = 0; i<CPUs.length; i++){
+                    if (i == this.CPU.number){
+                        if (CPUs[i].cardInHand(card)){
+                            this.target = i;
+                        }
+                    }
+                }
+            }
         }
     }
     getTarget(){
@@ -248,23 +278,33 @@ class Hand {
         this.player = player;
     }
     cardPresent(card){
-        // iterate through hand
-        // return true if hand contains card
+        for (var i = 0; i<this.size; i++){
+            if (this.hand[i].getCardNumber()==card.getCardNumber()){
+                return true;
+            }
+        }
     }
     addCard(card){
-        // iterate through
-        // add card to the hand
+        this.hand[this.size+1] = card;
         this.size++;
     }
     removeCard(card){
-        // iterate through
-        // remove card from hand
+        var index = 0;
+        for (var i = 0; i<this.size; i++){
+            if (this.hand[i].getCardNumber()==card.getCardNumber() && this.hand[i].getCardSuit()==card.getCardSuit()){
+                index = i; 
+                break;
+            }
+        }
+        for (var i = index+1; i<this.size; i++){
+            this.hand[i-1]=this.hand[i];
+        }
         this.size--;
     }
     hasPairs(){
-        for (var i = 0; i<this.size; i++){
-            for (var j = i+1; j<this.size; j++){
-                if(hand[i]==hand[j]){
+        for (var i = 0; i<this.hand.size; i++){
+            for (var j = i+1; j<this.hand.size; j++){
+                if(this.hand[i].getCardNumber()==this.hand[j].getCardNumber()){
                     return true;
                 }
             }
