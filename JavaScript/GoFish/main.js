@@ -25,6 +25,7 @@ var backgroundImg;
 var turn = 0;
 
 var gameDone = false;
+var turnStart = false;
 
 
 window.onload = function init() {
@@ -95,6 +96,7 @@ class Player {
     setCardAndTarg(){
         this.target = document.getElementById("target");
         this.cardNumWanted = document.getElementById("num");
+        turnStart = true;
     }
     getTarget(){
         return this.target;
@@ -317,6 +319,9 @@ function play(player, cps){
     var winner = checkGame();
     while (!gameDone) {
         document.getElementById("ask").style.display = 'block';
+        while (!turnStart){
+            // wait until true
+        }
         go(player);
         for (var i = 0; i<numPlayers; i++){
             document.getElementById("ask").style.display = 'none';
