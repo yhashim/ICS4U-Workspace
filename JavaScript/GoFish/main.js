@@ -34,7 +34,6 @@ window.onload = function init() {
     ctx = canvas.getContext("2d");
     ctx.fillStyle = '#870000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    console.log('test');
 }
 
 function begin(num) {
@@ -351,9 +350,11 @@ function go(person){
     if (target.getHand.hasCard(numWant)){
             // ADD GETHAND TO CPU AND PLAYER CLASS
         // give stuff
+        turnStart = false;
         return;
     } else {
         // go fish stuff
+        turnStart = false;
         return;
     }
 }
