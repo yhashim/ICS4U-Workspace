@@ -2,7 +2,8 @@ const NUM_FACES = 13;
 const PLAY = 1;
 const NUM_CARDS = 5;
 const WIN_PTS = 10;
-const SUITS = ["h", "c", "d", "s"];
+var SUITS = ["hearts", "clubs", "diamonds", "spades"];
+
 
 var traits = []
     traits[0] = function IQ1000GOD(){
@@ -26,7 +27,7 @@ var backgroundImg;
 var turn = 0;
 
 var gameDone = false;
-var turnStart = false;
+var turnStart;
 
 var player;
 
@@ -36,62 +37,82 @@ window.onload = function init() {
     ctx = canvas.getContext("2d");
     ctx.fillStyle = '#870000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    turnStart = false;
 }
 
 function begin(num) {
+    console.log("began");
     document.getElementById("title").style.display = 'none';
+
     document.getElementById("b1").style.display = 'none';
     document.getElementById("b2").style.display = 'none';
     document.getElementById("b3").style.display = 'none';
+
     document.getElementById("num").style.display = 'block';
     document.getElementById("target").style.display = 'block';
+
     document.getElementById("text1").style.display = 'block';
     document.getElementById("text2").style.display = 'block';
+    document.getElementById("text3").style.display = 'block';
+
     document.getElementById("ask").style.display = 'block';
+
     player = new Player();
     for (var i = 0; i<NUM_CARDS; i++){
-        var randomCard = new Card(Math.floor(Math.random()*13), SUITS[Math.floor(Math.random()*SUITS.size)]);
+        var suit = SUITS[Math.trunc(Math.random()*SUITS.length)];
+        var randomCard = new Card(Math.floor(Math.random()*13) + 1, suit);
         player.recieveCard(randomCard);
     }
     numPlayers = num-1; // get from HTML pg how many wanted by player - 2, 3 or 4   
     for (var i = 0; i<numPlayers; i++){
-        var trait = traits[Math.floor(Math.random()*traits.size)];
+        var trait = traits[Math.floor(Math.random()*traits.length)];
         CPUs[i] = new CPU(i, trait);
-        for (var i = 0; i<NUM_CARDS; i++){
-            var randomCard = new Card(Math.floor(Math.random()*13), SUITS[Math.floor(Math.random()*SUITS.size)]);
-            player.recieveCard(randomCard);
+        var suit = SUITS[Math.trunc(Math.random()*SUITS.length)];
+        for (var j = 0; j<NUM_CARDS; j++){
+            var randomCard = new Card(Math.floor(Math.random()*13) + 1, suit);
+            CPUs[i].recieveCard(randomCard);
         }
     } 
+    console.log("about to draw");
     draw();
-    play(player, cps);
+    console.log("about to play with player")
+    play(player);
 }
 
 function draw() {
-    // if game oveer
+    // if game over
         // draw game over in center
         // return;
     // else
-    // draw player
+        // do drawy stuff
+            // draw player at bottom of screen
+            // draw cpus
+                // draw them based on num cpus
     var i = 10;
-    var all = player.getHand();
-    for (var c in all){
-       var card = all[c];
-       console.log(card.getCardNumber());
-       ctx.drawImage(card[card.getCardName()], 5+i, 50, card.width/4, card.height/4);   
+    var all = player.hand.hand;
+    for (var c of all){
+        var name = c.name;
+        var img = cards[c.name];
+       ctx.drawImage(img, 540+i, 500, img.width/4, img.height/4);   
        i += 25; 
     }
-    for (var j = 0; j<CPUs.size; j++){
-        all = CPUs[j].getHand();
-        for (var c in all){
+    for (var j = 0; j<CPUs.length; j++){
+        all = CPUs[j].hand.hand;
+        var x;
+        if (j == 0){
+            x = 20;
+        } else if (j == 1){
+            x = 295;
+        } else {
+            x = 550;
+        }
+        for (var c of all){
            var card = all[c];
-           ctx.drawImage(cards[card.getCardName()], 5+i, 50, card.width/4, card.height/4);   
+           // ctx.drawImage(cards[c.name], x+i, 75, cards[c.name].width/4, cards[c.name].height/4);
+           ctx.drawImage(cards['back'], x+i, 75, cards['back'].width/4, cards['back'].height/4)   
            i += 25; 
         } 
-    }
-        // do drawy stuff
-        // draw player at bottom of screen
-        // draw cpus
-            // draw them based on num cpus
+    }  
     window.requestAnimationFrame(draw);
 }
 
@@ -112,7 +133,7 @@ class Player {
     setCardAndTarg(){
         this.target = document.getElementById("target");
         this.cardNumWanted = document.getElementById("num");
-        turnStart = true;
+        play(this);
     }
     getTarget(){
         return this.target;
@@ -148,11 +169,15 @@ class Player {
         //while (//still no click){
             // wait
         //}
-        this.hand.addCard(cards[Math.floor(Math.random()*cards.size)]);
+        this.hand.addCard(cards[Math.floor(Math.random()*cards.length)]);
         // player can pick up a card from the messed up pile
         // this is for when the player has to go fish
         // also for when player must refill hand
     }
+}
+
+function setCardAndTarg(){
+    player.setCardAndTarg();
 }
 
 class CPU {
@@ -243,7 +268,7 @@ class CPU {
         //while (//still no click){
             // wait
         //}
-        this.hand.addCard(cards[Math.floor(Math.random()*cards.size)]);
+        this.hand.addCard(cards[Math.floor(Math.random()*cards.length)]);
         // player can pick up a card from the messed up pile
         // this is for when the player has to go fish
         // also for when player must refill hand
@@ -254,7 +279,9 @@ class Card {
     constructor(number, suit){
         this.number = number;   
         this.suit = suit;
-        this.name = suit+number;
+    }
+    get name(){
+        return "" + this.suit + this.number;
     }
     getCardName(){
         return this.name;
@@ -285,7 +312,7 @@ class Hand {
         }
     }
     addCard(card){
-        this.hand[this.size+1] = card;
+        this.hand[this.size] = card;
         this.size++;
     }
     removeCard(card){
@@ -354,17 +381,16 @@ function checkPairs(hand, player){
     }
 }
 
-function play(player, cps){
+function play(player){
     var winner = checkGame();
     while (!gameDone) {
         document.getElementById("ask").style.display = 'block';
-        while (!turnStart){
-            // wait until true
-        }
         go(player);
+        checkGame();
         for (var i = 0; i<numPlayers; i++){
             document.getElementById("ask").style.display = 'none';
             go(CPUs[i]);
+            checkGame();
         }
     }
     console.log(winner);
@@ -375,19 +401,24 @@ function checkGame(){
         gameDone = true;
         return player;
     } 
-    for (var i = 0; i<CPUs.size; i++){
+    for (var i = 0; i<CPUs.length; i++){
         if (CPUs[i].getPoints()>=10){
             gameDone = true;
             return CPU[i];
         }
     }
-    checkGame();
+    //checkGame();
 }
 
 function go(person){
-    var numWant = person.getCardWanted();
-    var target = person.getTarget();
-    if (target.getHand.hasCard(numWant)){
+    var numWant = person.cardNumWanted;
+    var target;
+    if (person.target == 0){
+        target = person;
+    } else {
+        target = CPUs[person.target-1];
+    }
+    if (target.hand.cardPresent(numWant)){
             // ADD GETHAND TO CPU AND PLAYER CLASS
         // give stuff
         turnStart = false;
@@ -402,50 +433,68 @@ function go(person){
 function loadAllImgs() {
     backgroundImg = new Image();
     backgroundImg.src = "images/bg2.png";
+
+    var back = new Image();
+    back.src = "images/cards/back.png";
+    cards['back'] = back;
+
     for (var i = 2; i <= 10; i++) {
         var img = new Image();
         img.src = "images/cards/clubs" + i + ".png";
         cards['clubs' + i] = img;
     }
     img.src = "images/cards/clubs" + "J" + ".png";
-    cards['clubsJ'] = img;
+    cards['clubs11'] = img;
     img.src = "images/cards/clubs" + "Q" + ".png";
-    cards['clubsQ'] = img;
+    cards['clubs12'] = img;
     img.src = "images/cards/clubs" + "K" + ".png";
-    cards['clubsK'] = img;
+    cards['clubs13'] = img;
+
     for (var i = 2; i <= 10; i++) {
         var img = new Image();
         img.src = "images/cards/diamonds" + i + ".png";
         cards['diamonds' + i] = img;
     }
     img.src = "images/cards/diamonds" + "J" + ".png";
-    cards['diamondsJ'] = img;
+    cards['diamonds11'] = img;
     img.src = "images/cards/diamonds" + "Q" + ".png";
-    cards['diamondsQ'] = img;
+    cards['diamonds12'] = img;
     img.src = "images/cards/diamonds" + "K" + ".png";
-    cards['diamondsK'] = img;
+    cards['diamonds13'] = img;
+
     for (var i = 2; i <= 10; i++) {
         var img = new Image();
         img.src = "images/cards/hearts" + i + ".png";
         cards['hearts' + i] = img;
     }
     img.src = "images/cards/hearts" + "J" + ".png";
-    cards['heartsJ'] = img;
+    cards['hearts11'] = img;
     img.src = "images/cards/hearts" + "Q" + ".png";
-    cards['heartsQ'] = img;
+    cards['hearts12'] = img;
     img.src = "images/cards/hearts" + "K" + ".png";
-    cards['heartsK'] = img;
+    cards['hearts13'] = img;
+
     for (var i = 2; i <= 10; i++) {
         var img = new Image();
         img.src = "images/cards/spades" + i + ".png";
         cards['spades' + i] = img;
     }
     img.src = "images/cards/spades" + "J" + ".png";
-    cards['spadesJ'] = img;
+    cards['spades11'] = img;
     img.src = "images/cards/spades" + "Q" + ".png";
-    cards['spadesQ'] = img;
+    cards['spades12'] = img;
     img.src = "images/cards/spades" + "K" + ".png";
-    cards['spadesK'] = img;
+    cards['spades13'] = img;
+
+    // ACES - lol forgot them
+    img.src = "images/cards/clubs" + "A" + ".png";
+    cards['clubs1'] = img;
+    img.src = "images/cards/hearts" + "A" + ".png";
+    cards['hearts1'] = img;
+    img.src = "images/cards/diamonds" + "A" + ".png";
+    cards['diamonds1'] = img;
+    img.src = "images/cards/spades" + "A" + ".png";
+    cards['spades1'] = img;
 }
 
 function getCard() {
