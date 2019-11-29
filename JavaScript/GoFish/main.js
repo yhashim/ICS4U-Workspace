@@ -113,6 +113,9 @@ function draw() {
            i += 25; 
         } 
     }  
+    ctx.font = "10px Times New Roman";
+    ctx.fillStyle = "white";
+    ctx.fillText(player.points, 840, 725); 
     window.requestAnimationFrame(draw);
 }
 
@@ -314,6 +317,7 @@ class Hand {
     addCard(card){
         this.hand[this.size] = card;
         this.size++;
+        // this.findMatches(); for some reason this makes everyone have no cards at game start
     }
     removeCard(card){
         var index = 0;
@@ -329,7 +333,7 @@ class Hand {
         this.size--;
     }
     hasPairs(){
-        for (var i = 0; i<this.hand.size; i++){
+        for (var i = 0; i<this.hand.size-1; i++){
             for (var j = i+1; j<this.hand.size; j++){
                 if(this.hand[i].getCardNumber()==this.hand[j].getCardNumber()){
                     return true;
