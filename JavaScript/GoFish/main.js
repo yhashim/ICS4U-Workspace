@@ -6,17 +6,17 @@ var SUITS = ["hearts", "clubs", "diamonds", "spades"];
 
 
 var traits = []
-    traits[0] = function IQ1000GOD(){
-        // knows everyone's cards and who has what
-        // always gets what they want
-    };
-    traits[1] = function BULLY(){
-        // targets the player only
-    };
-    traits[2] = function VEGETABLE(){
-        // only asks for cards they don't have themselves
-        // asks whoever doesn't have the card they want for it
-    };
+traits[0] = function IQ1000GOD() {
+    // knows everyone's cards and who has what
+    // always gets what they want
+};
+traits[1] = function BULLY() {
+    // targets the player only
+};
+traits[2] = function VEGETABLE() {
+    // only asks for cards they don't have themselves
+    // asks whoever doesn't have the card they want for it
+};
 var cards = [];
 var CPUs = [];
 var numPlayers;
@@ -33,7 +33,7 @@ var player;
 
 window.onload = function init() {
     loadAllImgs();
-    canvas = document.getElementById("myCanvas"); 
+    canvas = document.getElementById("myCanvas");
     ctx = canvas.getContext("2d");
     ctx.fillStyle = '#870000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -41,7 +41,6 @@ window.onload = function init() {
 }
 
 function begin(num) {
-    console.log("began");
     document.getElementById("title").style.display = 'none';
 
     document.getElementById("b1").style.display = 'none';
@@ -53,138 +52,170 @@ function begin(num) {
 
     document.getElementById("text1").style.display = 'block';
     document.getElementById("text2").style.display = 'block';
-    document.getElementById("text3").style.display = 'block';
 
     document.getElementById("ask").style.display = 'block';
 
     player = new Player();
-    for (var i = 0; i<NUM_CARDS; i++){
-        var suit = SUITS[Math.trunc(Math.random()*SUITS.length)];
-        var randomCard = new Card(Math.floor(Math.random()*13) + 1, suit);
+    for (var i = 0; i < NUM_CARDS; i++) {
+        var suit = SUITS[Math.floor(Math.random() * SUITS.length)];
+        var randomCard = new Card(Math.floor(Math.random() * 13) + 1, suit);
         player.recieveCard(randomCard);
     }
-    numPlayers = num-1; // get from HTML pg how many wanted by player - 2, 3 or 4   
-    for (var i = 0; i<numPlayers; i++){
-        var trait = traits[Math.floor(Math.random()*traits.length)];
+    numPlayers = num - 1; // get from HTML pg how many wanted by player - 2, 3 or 4   
+    for (var i = 0; i < numPlayers; i++) {
+        var trait = traits[Math.floor(Math.random() * traits.length)];
         CPUs[i] = new CPU(i, trait);
-        var suit = SUITS[Math.trunc(Math.random()*SUITS.length)];
-        for (var j = 0; j<NUM_CARDS; j++){
-            var randomCard = new Card(Math.floor(Math.random()*13) + 1, suit);
+        for (var j = 0; j < NUM_CARDS; j++) {
+            var suit = SUITS[Math.floor(Math.random() * SUITS.length)];
+            var randomCard = new Card(Math.floor(Math.random() * 13) + 1, suit);
             CPUs[i].recieveCard(randomCard);
         }
-    } 
-    console.log("about to draw");
+    }
     draw();
-    console.log("about to play with player")
-    play(player);
+   // play(player);
 }
 
 function draw() {
     // if game over
-        // draw game over in center
-        // return;
+    // draw game over in center
+    // return;
     // else
-        // do drawy stuff
-            // draw player at bottom of screen
-            // draw cpus
-                // draw them based on num cpus
+    // do drawy stuff
+    // draw player at bottom of screen
+    // draw cpus
+    // draw them based on num cpus
     var i = 10;
     var all = player.hand.hand;
-    for (var c of all){
+    for (var c of all) {
         var name = c.name;
         var img = cards[c.name];
-       ctx.drawImage(img, 540+i, 500, img.width/4, img.height/4);   
-       i += 25; 
+        ctx.drawImage(img, 540 + i, 500, img.width / 4, img.height / 4);
+        i += 25;
     }
-    for (var j = 0; j<CPUs.length; j++){
-        all = CPUs[j].hand.hand;
-        var x;
-        if (j == 0){
-            x = 20;
-        } else if (j == 1){
-            x = 295;
-        } else {
-            x = 550;
+    if (CPUs.length == 1) {
+        all = CPUs[0].hand.hand;
+        var x = 418;
+        for (var c of all) {
+            var card = all[c];
+            // ctx.drawImage(cards[c.name], x+i, 75, cards[c.name].width/4, cards[c.name].height/4);
+            ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
+            i += 25;
         }
-        for (var c of all){
-           var card = all[c];
-           // ctx.drawImage(cards[c.name], x+i, 75, cards[c.name].width/4, cards[c.name].height/4);
-           ctx.drawImage(cards['back'], x+i, 75, cards['back'].width/4, cards['back'].height/4)   
-           i += 25; 
-        } 
-    }  
-    ctx.font = "10px Times New Roman";
+        ctx.font = "18px Times New Roman";
+        ctx.fillStyle = "white";
+        ctx.fillText("Points: " + CPUs[0].points, 640, 50);
+    } else if (CPUs.length == 2) {
+        for (var j = 0; j < CPUs.length; j++) {
+            all = CPUs[j].hand.hand;
+            var x;
+            if (j == 0) {
+                x = 145;
+            } else {
+                x = 550;
+            }
+            for (var c of all) {
+                var card = all[c];
+                // ctx.drawImage(cards[c.name], x+i, 75, cards[c.name].width/4, cards[c.name].height/4);
+                ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
+                i += 25;
+            }
+            ctx.font = "18px Times New Roman";
+            ctx.fillStyle = "white";
+            if (j == 0) {
+                ctx.fillText("Points: " + CPUs[j].points, 360, 50);
+            } else {
+                ctx.fillText("Points: " + CPUs[j].points, 900, 50);
+            }
+        }
+    } else if (CPUs.length == 3) {
+        for (var j = 0; j < CPUs.length; j++) {
+            all = CPUs[j].hand.hand;
+            var x;
+            if (j == 0) {
+                x = 20;
+            } else if (j == 1) {
+                x = 285;
+            } else {
+                x = 550;
+            }
+            for (var c of all) {
+                var card = all[c];
+                // ctx.drawImage(cards[c.name], x+i, 75, cards[c.name].width/4, cards[c.name].height/4);
+                ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
+                i += 25;
+            }
+            ctx.font = "18px Times New Roman"; // WHY IS THE FONT SO SMALL AND BLURRY!!!!?!?!?!?!!??!
+            ctx.fillStyle = "white";
+            if (j == 0) {
+                ctx.fillText("Points: " + CPUs[j].points, 240, 50);
+            } else if (j == 1) {
+                ctx.fillText("Points: " + CPUs[j].points, 630, 50);
+            } else {
+                ctx.fillText("Points: " + CPUs[j].points, 1025, 50);
+            }
+        }
+    }
+    ctx.font = "18px Times New Roman";
     ctx.fillStyle = "white";
-    ctx.fillText(player.points, 840, 725); 
+    ctx.fillText("Points: " + player.points, 780, 728);
     window.requestAnimationFrame(draw);
 }
 
 class Player {
-    constructor(){
+    constructor() {
         this.name = "You";
         this.hand = new Hand(this);
         this.points = 0;
         this.target;
         this.cardNumWanted;
     }
-    getHand(){
+    getHand() {
         return this.hand;
     }
-    getPoints(){
+    getPoints() {
         return this.points;
     }
-    setCardAndTarg(){
-        this.target = document.getElementById("target");
-        this.cardNumWanted = document.getElementById("num");
+    setCardAndTarg() {
+        this.target = document.getElementById("target").value;
+        this.cardNumWanted = document.getElementById("num").value;
         play(this);
     }
-    getTarget(){
+    getTarget() {
         return this.target;
     }
-    getCardWanted(){
+    getCardWanted() {
         return this.cardNumWanted;
     }
-    recieveCard(card){
+    recieveCard(card) {
         this.hand.addCard(card);
-        if (this.hand.hasPairs()){
+        if (this.hand.hasPairs()) {
             checkPairs(this.hand);
         }
     }
-    cardInHand(card){
+    cardInHand(card) {
         return this.hand.cardPresent(card);
     }
-    giveCard(card){
-        // put it in the CPU#'s hand
-        this.hand.removeCard();
+    giveCard(card) {
+        return this.hand.removeCard(card);
     }
-    isHandEmpty(){
+    isHandEmpty() {
         return this.hand.size == 0;
     }
-    refillHand(){
-        if (this.hand.isHandEmpty()){
-            for(var i = 0; i<NUM_CARDS; i++){
+    refillHand() {
+        if (this.hand.isHandEmpty()) {
+            for (var i = 0; i < NUM_CARDS; i++) {
                 drawCard();
             }
         }
     }
-    drawCard(){
-        // once player clicks on a card
-        //while (//still no click){
-            // wait
-        //}
-        this.hand.addCard(cards[Math.floor(Math.random()*cards.length)]);
-        // player can pick up a card from the messed up pile
-        // this is for when the player has to go fish
-        // also for when player must refill hand
-    }
 }
 
-function setCardAndTarg(){
+function setCardAndTarg() {
     player.setCardAndTarg();
 }
 
 class CPU {
-    constructor(number, trait){
+    constructor(number, trait) {
         this.number = number;
         this.name = "CPU" + number;
         this.trait = trait;
@@ -193,34 +224,34 @@ class CPU {
         this.target;
         this.cardNumWanted;
     }
-    getHand(){
+    getHand() {
         return this.hand;
     }
-    getPoints(){
+    getPoints() {
         return this.points;
     }
-    setTarget(number){
-        if (this.trait == VEGETABLE){
-            if (!player.cardInHand(card)){
+    setTarget(number) {
+        if (this.trait == VEGETABLE) {
+            if (!player.cardInHand(card)) {
                 this.target = 0;
             } else {
-                for (var i = 0; i<CPUs.length; i++){
-                    if (i == this.CPU.number){
-                        if (!CPUs[i].cardInHand(card)){
+                for (var i = 0; i < CPUs.length; i++) {
+                    if (i == this.CPU.number) {
+                        if (!CPUs[i].cardInHand(card)) {
                             this.target = i;
                         }
                     }
                 }
             }
-        } else if (this.trait == BULLY){
+        } else if (this.trait == BULLY) {
             this.target = 0; // player
-        } else if (this.trait == IQ1000GOD){
-            if (player.cardInHand(card)){
+        } else if (this.trait == IQ1000GOD) {
+            if (player.cardInHand(card)) {
                 this.target = 0;
             } else {
-                for (var i = 0; i<CPUs.length; i++){
-                    if (i == this.CPU.number){
-                        if (CPUs[i].cardInHand(card)){
+                for (var i = 0; i < CPUs.length; i++) {
+                    if (i == this.CPU.number) {
+                        if (CPUs[i].cardInHand(card)) {
                             this.target = i;
                         }
                     }
@@ -228,121 +259,109 @@ class CPU {
             }
         }
     }
-    getTarget(){
+    getTarget() {
         return this.target;
     }
-    setCardWanted(number){
-        if (this.trait == VEGETABLE){
-            
-        } else if (this.trait == BULLY){
-            this.cardNumWanted = this.hand[Math.floor(Math.random()*this.hand.size)].getCardNumber();
-        } else if (this.trait == IQ1000GOD){
+    setCardWanted(number) {
+        if (this.trait == VEGETABLE) {
+
+        } else if (this.trait == BULLY) {
+            this.cardNumWanted = this.hand[Math.floor(Math.random() * this.hand.size)].getCardNumber();
+        } else if (this.trait == IQ1000GOD) {
 
         }
     }
-    getCardWanted(){
+    getCardWanted() {
         return this.cardNumWanted;
     }
-    recieveCard(card){
+    recieveCard(card) {
         this.hand.addCard(card);
-        if (this.hand.hasPairs()){
+        if (this.hand.hasPairs()) {
             checkPairs(this.hand);
         }
     }
-    cardInHand(card){
+    cardInHand(card) {
         return this.hand.cardPresent(card);
     }
-    giveCard(number){
+    giveCard(card) {
         // put it in the CPU#'s hand
-        this.hand.removeCard();
+        return this.hand.removeCard(card);
     }
-    isHandEmpty(){
+    isHandEmpty() {
         return this.hand.size == 0;
     }
-    refillHand(){
-        if (this.hand.isHandEmpty()){
-            for(var i = 0; i<NUM_CARDS; i++){
+    refillHand() {
+        if (this.hand.isHandEmpty()) {
+            for (var i = 0; i < NUM_CARDS; i++) {
                 drawCard();
             }
         }
     }
-    drawCard(){
-        // once player clicks on a card
-        //while (//still no click){
-            // wait
-        //}
-        this.hand.addCard(cards[Math.floor(Math.random()*cards.length)]);
-        // player can pick up a card from the messed up pile
-        // this is for when the player has to go fish
-        // also for when player must refill hand
-    }
 }
 
 class Card {
-    constructor(number, suit){
-        this.number = number;   
+    constructor(number, suit) {
+        this.number = number;
         this.suit = suit;
     }
-    get name(){
+    get name() {
         return "" + this.suit + this.number;
     }
-    getCardName(){
+    getCardName() {
         return this.name;
     }
-    getCardNumber(){
+    getCardNumber() {
         return this.number;
     }
-    draw(x, y, visibility){
-        // if visibility
-            // image = image of card
-        // if !visibility
-            // image = image of back of card
-        // print out card at coords on canvas
+    getSuit() {
+        return this.suit;
     }
 }
 
 class Hand {
-    constructor(player){
+    constructor() {
         this.hand = [];
         this.size = 0;
-        this.player = player;
     }
-    cardPresent(card){
-        for (var i = 0; i<this.size; i++){
-            if (this.hand[i].getCardNumber()==card.getCardNumber()){
+    cardPresent(card) {
+        for (var i = 0; i < this.size; i++) {
+            if (this.hand[i].getCardNumber() == card) {
                 return true;
             }
         }
     }
-    addCard(card){
+    addCard(card) {
         this.hand[this.size] = card;
         this.size++;
         // this.findMatches(); for some reason this makes everyone have no cards at game start
     }
-    removeCard(card){
+    removeCard(card) {
         var index = 0;
-        for (var i = 0; i<this.size; i++){
-            if (this.hand[i].getCardNumber()==card.getCardNumber() && this.hand[i].getCardSuit()==card.getCardSuit()){
-                index = i; 
+        var suit;
+        for (var i = 0; i < this.size; i++) {
+            if (this.hand[i].getCardNumber() == card) {
+                index = i;
+                suit = this.hand[i].getSuit();
                 break;
             }
         }
-        for (var i = index+1; i<this.size; i++){
-            this.hand[i-1]=this.hand[i];
+        for (var i = index + 1; i < this.size; i++) {
+            this.hand[i - 1] = this.hand[i];
         }
         this.size--;
+        return suit;
     }
-    hasPairs(){
-        for (var i = 0; i<this.hand.size-1; i++){
-            for (var j = i+1; j<this.hand.size; j++){
-                if(this.hand[i].getCardNumber()==this.hand[j].getCardNumber()){
+    hasPairs() {
+        for (var i = 0; i < this.hand.size - 1; i++) {
+            for (var j = i + 1; j < this.hand.size; j++) {
+                if (this.hand[i].getCardNumber() == this.hand[j].getCardNumber()) {
                     return true;
                 }
             }
         }
         return false;
     }
-    findMatches(){
+    findMatches() {
         // iterate through
         // return matches and keep indeces of first and second match
         // delete them
@@ -350,27 +369,22 @@ class Hand {
         // repeat until no matches
         checkPairs(hand, hand.getPlayer);
     }
-    draw(){
-        // draw each individual card
-        // iterate through
-        // call each card's draw
-    }
 }
 
-function checkPairs(hand, player){
-    if (!hand.hasPairs){
+function checkPairs(hand, player) {
+    if (!hand.hasPairs) {
         return;
     } else {
-        for (var i = 0; i<hand.size; i++){
-            for (var j = i+1; j<hand.size; j++){
-                if (hand[i]==hand[j]){
+        for (var i = 0; i < hand.size; i++) {
+            for (var j = i + 1; j < hand.size; j++) {
+                if (hand[i] == hand[j]) {
                     var oldHand = hand;
                     var newHand = [];
                     hand[i] = null;
                     hand[j] = null;
                     var l = 0;
-                    for (var k = 0; k<hand.size; k++){
-                        if (hand[k] != null){
+                    for (var k = 0; k < hand.size; k++) {
+                        if (hand[k] != null) {
                             newHand[l] = hand[k];
                             l++;
                         }
@@ -385,50 +399,81 @@ function checkPairs(hand, player){
     }
 }
 
-function play(player){
+function play(player) {
     var winner = checkGame();
     while (!gameDone) {
         document.getElementById("ask").style.display = 'block';
         go(player);
         checkGame();
-        for (var i = 0; i<numPlayers; i++){
+        for (var i = 0; i < numPlayers; i++) {
             document.getElementById("ask").style.display = 'none';
             go(CPUs[i]);
             checkGame();
         }
     }
-    console.log(winner);
+    console.log(winner + " won the game!");
 }
 
-function checkGame(){
-    if (player.getPoints()>=10){
+function checkGame() {
+    if (player.getPoints() >= 10) {
         gameDone = true;
         return player;
-    } 
-    for (var i = 0; i<CPUs.length; i++){
-        if (CPUs[i].getPoints()>=10){
+    }
+    for (var i = 0; i < CPUs.length; i++) {
+        if (CPUs[i].getPoints() >= 10) {
             gameDone = true;
             return CPU[i];
         }
     }
-    //checkGame();
+    return;
 }
 
-function go(person){
+function go(person) {
     var numWant = person.cardNumWanted;
     var target;
-    if (person.target == 0){
+    if (person.target == 0) {
         target = person;
     } else {
-        target = CPUs[person.target-1];
+        target = CPUs[person.target - 1];
     }
-    if (target.hand.cardPresent(numWant)){
-            // ADD GETHAND TO CPU AND PLAYER CLASS
-        // give stuff
+    if (target.hand.cardPresent(numWant)) {
+        var num = "";
+        if (numWant == 1) {
+            num = "A";
+        } else if (numWant == 11){
+            num = "J";
+        } else if (numWant == 12){
+            num = "Q";
+        } else if (numWant == 13){
+            num = "K";
+        }
+        if (person.name == "You"){
+            alert("CPU" + person.target + " had a " + num + ". You now have a " + num + ".");
+        } else {
+            alert("CPU" + person.target + " had a " + num + ". " + person.name + " now has a " + num + "."); 
+        }
+        var suit = target.giveCard(numWant);
+        var card = new Card(numWant, suit);
+        person.recieveCard(numWant);
         turnStart = false;
         return;
     } else {
-        // go fish stuff
+        var num = Math.floor((Math.random()*13)+1);
+        var numSay = num;
+        if (num == 1) {
+            numSay = "A";
+        } else if (num == 11){
+            numSay = "J";
+        } else if (num == 12){
+            numSay = "Q";
+        } else if (num == 13){
+            numSay = "K";
+        }
+        // DONT LET IT WORK UNTIL THEY PICK A NUM AND PERSONNAME
+        alert("CPU" + person.target + " did not have a " + numWant + ". " + person.name + " picked up a " + numSay + ".");
+        var suit = SUITS[Math.floor(Math.random() * SUITS.length)];
+        var card = new Card(num, suit);
+        person.recieveCard(card);
         turnStart = false;
         return;
     }
