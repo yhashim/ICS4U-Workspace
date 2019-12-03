@@ -61,7 +61,8 @@ function begin(num) {
         var randomCard = new Card(Math.floor(Math.random() * 13) + 1, suit);
         player.recieveCard(randomCard);
     }
-    numPlayers = num - 1; // get from HTML pg how many wanted by player - 2, 3 or 4   
+    checkPairs(player.hand, player);
+    numPlayers = num - 1; 
     for (var i = 0; i < numPlayers; i++) {
         var trait = traits[Math.floor(Math.random() * traits.length)];
         CPUs[i] = new CPU(i, trait);
@@ -70,9 +71,9 @@ function begin(num) {
             var randomCard = new Card(Math.floor(Math.random() * 13) + 1, suit);
             CPUs[i].recieveCard(randomCard);
         }
+        checkPairs(CPUs[i].hand, CPUs[i]);
     }
     draw();
-   // play(player);
 }
 
 function draw() {
@@ -97,8 +98,8 @@ function draw() {
         var x = 418;
         for (var c of all) {
             var card = all[c];
-            // ctx.drawImage(cards[c.name], x+i, 75, cards[c.name].width/4, cards[c.name].height/4);
-            ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
+            ctx.drawImage(cards[c.name], x+i, 75, cards[c.name].width/4, cards[c.name].height/4);
+            //ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
             i += 25;
         }
         ctx.font = "18px Times New Roman";
@@ -115,8 +116,8 @@ function draw() {
             }
             for (var c of all) {
                 var card = all[c];
-                // ctx.drawImage(cards[c.name], x+i, 75, cards[c.name].width/4, cards[c.name].height/4);
-                ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
+                ctx.drawImage(cards[c.name], x+i, 75, cards[c.name].width/4, cards[c.name].height/4);
+                //ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
                 i += 25;
             }
             ctx.font = "18px Times New Roman";
@@ -140,11 +141,11 @@ function draw() {
             }
             for (var c of all) {
                 var card = all[c];
-                // ctx.drawImage(cards[c.name], x+i, 75, cards[c.name].width/4, cards[c.name].height/4);
-                ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
+                ctx.drawImage(cards[c.name], x+i, 75, cards[c.name].width/4, cards[c.name].height/4);
+                // ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
                 i += 25;
             }
-            ctx.font = "18px Times New Roman"; // WHY IS THE FONT SO SMALL AND BLURRY!!!!?!?!?!?!!??!
+            ctx.font = "18px Times New Roman";
             ctx.fillStyle = "white";
             if (j == 0) {
                 ctx.fillText("Points: " + CPUs[j].points, 240, 50);
@@ -361,14 +362,6 @@ class Hand {
         }
         return false;
     }
-    findMatches() {
-        // iterate through
-        // return matches and keep indeces of first and second match
-        // delete them
-        // add 1 point
-        // repeat until no matches
-        checkPairs(hand, hand.getPlayer);
-    }
 }
 
 function checkPairs(hand, player) {
@@ -431,13 +424,23 @@ function checkGame() {
 function go(person) {
     var numWant = person.cardNumWanted;
     var target;
+    // var numPres;
+    // if (numWant == 1) {
+    //         numPres = "A";
+    //     } else if (numWant == 11){
+    //         numPres = "J";
+    //     } else if (numWant == 12){
+    //         numPres = "Q";
+    //     } else if (numWant == 13){
+    //         numPres = "K";
+    //     }
     if (person.target == 0) {
         target = person;
     } else {
         target = CPUs[person.target - 1];
     }
     if (target.hand.cardPresent(numWant)) {
-        var num = "";
+        var num = numWant;
         if (numWant == 1) {
             num = "A";
         } else if (numWant == 11){
@@ -452,29 +455,44 @@ function go(person) {
         } else {
             alert("CPU" + person.target + " had a " + num + ". " + person.name + " now has a " + num + "."); 
         }
-        var suit = target.giveCard(numWant);
-        var card = new Card(numWant, suit);
-        person.recieveCard(numWant);
+        var suit = target.giveCard(num);
+        var card = new Card(num, suit);
+        
+                target.removeCard(card); // SOMEHOW REMOVE THE EXACT CARD
+
+        person.recieveCard(card);
         turnStart = false;
+        checkPairs(person.hand, person);
         return;
     } else {
+        var numSay1 = numWant;
+        if (numWant == 1) {
+            numSay1 = "A";
+        } else if (numWant == 11){
+            numSay1 = "J";
+        } else if (numWant == 12){
+            numSay1 = "Q";
+        } else if (numWant == 13){
+            numSay1 = "K";
+        }
         var num = Math.floor((Math.random()*13)+1);
-        var numSay = num;
+        var numSay2 = num;
         if (num == 1) {
-            numSay = "A";
+            numSay2 = "A";
         } else if (num == 11){
-            numSay = "J";
+            numSay2 = "J";
         } else if (num == 12){
-            numSay = "Q";
+            numSay2 = "Q";
         } else if (num == 13){
-            numSay = "K";
+            numSay2 = "K";
         }
         // DONT LET IT WORK UNTIL THEY PICK A NUM AND PERSONNAME
-        alert("CPU" + person.target + " did not have a " + numWant + ". " + person.name + " picked up a " + numSay + ".");
+        alert("CPU" + person.target + " did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".");
         var suit = SUITS[Math.floor(Math.random() * SUITS.length)];
         var card = new Card(num, suit);
         person.recieveCard(card);
         turnStart = false;
+        checkPairs(person.hand, person);
         return;
     }
 }
