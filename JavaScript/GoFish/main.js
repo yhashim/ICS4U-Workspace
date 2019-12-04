@@ -308,6 +308,7 @@ class Hand {
                 return true;
             }
         }
+        return false;
     }
     addCard(card) {
         this.hand[this.length] = card;
@@ -337,7 +338,7 @@ function checkPairs(hand, person) {
     } else {
         for (var i = 0; i < hand.length; i++) {
             for (var j = (i + 1); j < hand.length; j++) {
-                if (hand[i].number == hand[j].number) {
+                if (hand[i] != null && hand[j] != null && hand[i].number == hand[j].number) {
                     var newHand = new Hand();
                     hand[i] = null;
                     hand[j] = null;
@@ -350,9 +351,10 @@ function checkPairs(hand, person) {
                         }
                     }
                     person.hand = newHand;
-                    // person.hand.hand.length -= 2; // IS THIS NEEDED? DEBUGOGOGO
                     person.points++;
-                    alert(person.name + " had a pair removed."); // DO SOMETHING SO THIS ALERT DOESNT HAPPEN BEFORE THE GAME LOADS 
+                    //alert(person.name + " had a pair removed."); // DO SOMETHING SO THIS ALERT DOESNT HAPPEN BEFORE THE GAME LOADS 
+                    console.log('YEAH!!!!!');
+                    break;
                 }
             }
         }
@@ -414,7 +416,7 @@ function go(person) {
         } else {
             alert("CPU" + person.target + " had a " + num + ". " + person.name + " now has a " + num + "."); 
         }
-        var suit = target.giveCard(num);
+        var suit = target.giveCard(numWant);
         var card = new Card(num, suit);
         
                 target.hand.removeCard(card); // SOMEHOW REMOVE THE EXACT CARD
@@ -448,6 +450,8 @@ function go(person) {
         }
         // DONT LET IT WORK UNTIL THEY PICK A NUM AND PERSONNAME
         alert("CPU" + person.target + " did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".");
+        
+
         var suit = SUITS[Math.floor(Math.random() * SUITS.length)];
         var card = new Card(Math.floor(Math.random() * 13) + 1, suit);
         person.recieveCard(card);
@@ -471,10 +475,13 @@ function loadAllImgs() {
         img.src = "images/cards/clubs" + i + ".png";
         cards['clubs' + i] = img;
     }
+    img = new Image();
     img.src = "images/cards/clubs" + "J" + ".png";
     cards['clubs11'] = img;
+    img = new Image();
     img.src = "images/cards/clubs" + "Q" + ".png";
     cards['clubs12'] = img;
+    img = new Image();
     img.src = "images/cards/clubs" + "K" + ".png";
     cards['clubs13'] = img;
 
@@ -483,10 +490,13 @@ function loadAllImgs() {
         img.src = "images/cards/diamonds" + i + ".png";
         cards['diamonds' + i] = img;
     }
+    img = new Image();
     img.src = "images/cards/diamonds" + "J" + ".png";
     cards['diamonds11'] = img;
+    img = new Image();
     img.src = "images/cards/diamonds" + "Q" + ".png";
     cards['diamonds12'] = img;
+    img = new Image();
     img.src = "images/cards/diamonds" + "K" + ".png";
     cards['diamonds13'] = img;
 
@@ -495,10 +505,13 @@ function loadAllImgs() {
         img.src = "images/cards/hearts" + i + ".png";
         cards['hearts' + i] = img;
     }
+    var img = new Image();
     img.src = "images/cards/hearts" + "J" + ".png";
     cards['hearts11'] = img;
+    img = new Image();
     img.src = "images/cards/hearts" + "Q" + ".png";
     cards['hearts12'] = img;
+    img = new Image();
     img.src = "images/cards/hearts" + "K" + ".png";
     cards['hearts13'] = img;
 
@@ -507,37 +520,29 @@ function loadAllImgs() {
         img.src = "images/cards/spades" + i + ".png";
         cards['spades' + i] = img;
     }
+    img = new Image();
     img.src = "images/cards/spades" + "J" + ".png";
     cards['spades11'] = img;
+    img = new Image();
     img.src = "images/cards/spades" + "Q" + ".png";
     cards['spades12'] = img;
+    img = new Image();
     img.src = "images/cards/spades" + "K" + ".png";
     cards['spades13'] = img;
 
     // ACES - lol forgot them
+    img = new Image();
     img.src = "images/cards/clubs" + "A" + ".png";
     cards['clubs1'] = img;
+    img = new Image();
     img.src = "images/cards/hearts" + "A" + ".png";
     cards['hearts1'] = img;
+    img = new Image();
     img.src = "images/cards/diamonds" + "A" + ".png";
     cards['diamonds1'] = img;
+    img = new Image();
     img.src = "images/cards/spades" + "A" + ".png";
     cards['spades1'] = img;
-}
-
-function getCard() {
-    var x = Math.floor(Math.random() * NUM_FACES + 2);
-    if (x <= 10) {
-        return "" + x;
-    } else if (x == 11) {
-        return "J";
-    } else if (x == 12) {
-        return "Q";
-    } else if (x == 13) {
-        return "K";
-    } else {
-        return "A";
-    }
 }
 
 function draw() {
@@ -561,7 +566,9 @@ function draw() {
         all = CPUs[0].hand.hand;
         var x = 418;
         for (var c of all) {
-            ctx.drawImage(cards[c.name], x+i, 75, cards[c.name].width/4, cards[c.name].height/4);
+            var name = c.name;
+            var img = cards[c.name];
+            ctx.drawImage(img, x+i, 75, img.width/4, img.height/4);
             //ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
             i += 25;
         }
@@ -578,7 +585,9 @@ function draw() {
                 x = 550;
             }
             for (var c of all) {
-                ctx.drawImage(cards[c.name], x+i, 75, cards[c.name].width/4, cards[c.name].height/4);
+                var name = c.name;
+                var img = cards[c.name];
+                ctx.drawImage(img, x+i, 75, img.width/4, img.height/4);
                 //ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
                 i += 25;
             }
@@ -602,7 +611,9 @@ function draw() {
                 x = 550;
             }
             for (var c of all) {
-                ctx.drawImage(cards[c.name], x+i, 75, cards[c.name].width/4, cards[c.name].height/4);
+                var name = c.name;
+                var img = cards[c.name];
+                ctx.drawImage(img, x+i, 75, img.width/4, img.height/4);
                 // ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
                 i += 25;
             }
