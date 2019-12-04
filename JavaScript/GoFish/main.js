@@ -324,10 +324,17 @@ class Hand {
                 break;
             }
         }
-        for (var i = index + 1; i < this.length; i++) {
-            this.hand[i - 1] = this.hand[i];
+        var modHand = new Hand();
+        for (var i = 0; i<index; i++){
+            modHand.hand[i] = this.hand[i];
+            modHand.length++;
         }
-        this.length--;
+        for (var i = index + 1; i < this.length; i++) {
+            modHand.hand[i - 1] = this.hand[i];
+            modHand.length++;
+        }
+        this.hand = modHand.hand;
+        this.length = modHand.length;
         return suit;
     }
 }
