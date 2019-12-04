@@ -68,6 +68,7 @@ function begin(num) {
         var randomCard = new Card(Math.floor(Math.random() * 13) + 1, suit);
         player.recieveCard(randomCard);
     }
+        // IS THE ISSUE AUTOMATIC BASE CASE SO ITS NOT CHECKING? FIX BOOLEANS MAYBE?
     checkPairs(player.hand.hand, player);
     for (var i = 0; i < numPlayers; i++) {
         var trait = traits[Math.floor(Math.random() * traits.length)];
