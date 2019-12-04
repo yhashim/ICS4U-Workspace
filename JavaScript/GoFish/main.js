@@ -117,17 +117,29 @@ class Player {
     }
     hasPairs(){
         console.log(this.hand.length);
-        for (var i = 0; i < this.hand.length - 2; i++) {
-            for (var j = (i + 1); j < this.hand.length - 1; j++) {
-                if (this.hand.hand[i].number == this.hand.hand[j].number) {
-                    this.hand.hasPairs = true;
-                    console.log("Pair found for: " + this.name);
-                    return true;
+        if (this.hand.length == 1){
+            this.hand.hasPairs = false;
+            console.log(this.name + " has no pairs.");                
+            return false; 
+        } else if (this.hand.length == 2){
+            if (this.hand.hand[0].number == this.hand.hand[1].number) {
+                this.hand.hasPairs = true;
+                console.log(this.name + " has a pair.");                
+                return true;
+            } 
+        } else {
+            for (var i = 0; i < this.hand.length - 1; i++) {
+                for (var j = (i + 1); j < this.hand.length; j++) {
+                    if (this.hand.hand[i].number == this.hand.hand[j].number) {
+                        this.hand.hasPairs = true;
+                        console.log(this.name + " has a pair.");
+                        return true;
+                    }
                 }
             }
         }
         this.hand.hasPairs = false;
-        console.log("No pair found for: " + this.name);
+        console.log(this.name + " has no pairs.");                
         return false;
     }
     cardInHand(card) {
@@ -221,17 +233,29 @@ class CPU {
     }
     hasPairs(){
         console.log(this.hand.length);
-        for (var i = 0; i < this.hand.length - 2; i++) {
-            for (var j = (i + 1); j < this.hand.length - 1; j++) {
-                if (this.hand.hand[i].number == this.hand.hand[j].number) {
-                    this.hand.hasPairs = true;
-                    console.log("Pair found for: " + this.name);
-                    return true;
+        if (this.hand.length == 1){
+            this.hand.hasPairs = false;
+            console.log(this.name + " has no pairs.");                
+            return false; 
+        } else if (this.hand.length == 2){
+            if (this.hand.hand[0].number == this.hand.hand[1].number) {
+                this.hand.hasPairs = true;
+                console.log(this.name + " has a pair.");                
+                return true;
+            } 
+        } else {
+            for (var i = 0; i < this.hand.length - 1; i++) {
+                for (var j = (i + 1); j < this.hand.length; j++) {
+                    if (this.hand.hand[i].number == this.hand.hand[j].number) {
+                        this.hand.hasPairs = true;
+                        console.log(this.name + " has a pair.");
+                        return true;
+                    }
                 }
             }
         }
         this.hand.hasPairs = false;
-        console.log("No pair found for: " + this.name);
+        console.log(this.name + " has no pairs.");                
         return false;
     }
     cardInHand(card) {
@@ -309,7 +333,7 @@ class Hand {
 
 function checkPairs(hand, person) {
     if (person.hasPairs()==false) {
-        return;
+        return false;
     } else {
         for (var i = 0; i < hand.length; i++) {
             for (var j = (i + 1); j < hand.length; j++) {
@@ -325,12 +349,14 @@ function checkPairs(hand, person) {
                             l++;
                         }
                     }
-                    hand = newHand;
+                    person.hand = newHand;
+                    // person.hand.hand.length -= 2; // IS THIS NEEDED? DEBUGOGOGO
                     person.points++;
-                    checkPairs(hand.hand, person);
+                    alert(person.name + " had a pair removed."); // DO SOMETHING SO THIS ALERT DOESNT HAPPEN BEFORE THE GAME LOADS 
                 }
             }
         }
+        checkPairs(person.hand.hand, person);
     }
 }
 
