@@ -5,17 +5,15 @@ const WIN_PTS = 10;
 var SUITS = ["hearts", "clubs", "diamonds", "spades"];
 
 var traits = []
-traits[0] = function IQ1000GOD() {
-    // knows everyone's cards and who has what
-    // always gets what they want
-};
-traits[1] = function BULLY() {
-    // targets the player only
-};
-traits[2] = function VEGETABLE() {
-    // only asks for cards they don't have themselves
-    // asks whoever doesn't have the card they want for it
-};
+traits[0] = "IQ1000GOD";
+// knows everyone's cards and who has what
+// always gets what they want
+traits[1] = "BULLY";
+// targets the player only
+traits[2] = "veggie";
+// only asks for cards they don't have themselves
+// asks whoever doesn't have the card they want for it
+
 
 var cards = [];
 var CPUs = [];
@@ -42,21 +40,21 @@ window.onload = function init() {
 }
 
 function begin(num) {
-    numPlayers = num - 1; 
+    numPlayers = num - 1;
     document.getElementById("title").style.display = 'none';
     document.getElementById("b1").style.display = 'none';
     document.getElementById("b2").style.display = 'none';
     document.getElementById("b3").style.display = 'none';
     document.getElementById("num").style.display = 'block';
-    if (numPlayers==1){
+    if (numPlayers == 1) {
         document.getElementById("target1").style.display = 'block';
         targetElem = 1;
-    } else if (numPlayers==2){
+    } else if (numPlayers == 2) {
         document.getElementById("target2").style.display = 'block';
         targetElem = 2;
     } else {
         document.getElementById("target3").style.display = 'block';
-        targetElem = 3; 
+        targetElem = 3;
     }
     document.getElementById("text1").style.display = 'block';
     document.getElementById("text2").style.display = 'block';
@@ -68,7 +66,7 @@ function begin(num) {
         var randomCard = new Card(Math.floor(Math.random() * 13) + 1, suit);
         player.recieveCard(randomCard);
     }
-        // IS THE ISSUE AUTOMATIC BASE CASE SO ITS NOT CHECKING? FIX BOOLEANS MAYBE?
+    // IS THE ISSUE AUTOMATIC BASE CASE SO ITS NOT CHECKING? FIX BOOLEANS MAYBE?
     checkPairs(player.hand.hand, player);
     for (var i = 0; i < numPlayers; i++) {
         var trait = traits[Math.floor(Math.random() * traits.length)];
@@ -98,7 +96,7 @@ class Player {
         return this.points;
     }
     setCardAndTarg() {
-        this.target = document.getElementById("target"+targetElem).value;
+        this.target = document.getElementById("target" + targetElem).value;
         this.cardNumWanted = document.getElementById("num").value;
         play(this);
     }
@@ -110,23 +108,19 @@ class Player {
     }
     recieveCard(card) {
         this.hand.addCard(card);
-        this.hasPairs();
-        // if (this.hand.hasPairs) {
-        //     checkPairs(this.hand.hand, this);
-        // }
     }
-    hasPairs(){
+    hasPairs() {
         console.log(this.hand.length);
-        if (this.hand.length == 1){
+        if (this.hand.length == 1) {
             this.hand.hasPairs = false;
-            console.log(this.name + " has no pairs.");                
-            return false; 
-        } else if (this.hand.length == 2){
+            console.log(this.name + " has no pairs.");
+            return false;
+        } else if (this.hand.length == 2) {
             if (this.hand.hand[0].number == this.hand.hand[1].number) {
                 this.hand.hasPairs = true;
-                console.log(this.name + " has a pair.");                
+                console.log(this.name + " has a pair.");
                 return true;
-            } 
+            }
         } else {
             for (var i = 0; i < this.hand.length - 1; i++) {
                 for (var j = (i + 1); j < this.hand.length; j++) {
@@ -139,7 +133,7 @@ class Player {
             }
         }
         this.hand.hasPairs = false;
-        console.log(this.name + " has no pairs.");                
+        console.log(this.name + " has no pairs.");
         return false;
     }
     cardInHand(card) {
@@ -180,27 +174,27 @@ class CPU {
     getPoints() {
         return this.points;
     }
-    setTarget(number) {
-        if (this.trait == VEGETABLE) {
+    setTarget(card) {
+        if (this.trait == "veggie") {
             if (!player.cardInHand(card)) {
                 this.target = 0;
             } else {
                 for (var i = 0; i < CPUs.length; i++) {
-                    if (i == this.CPU.number) {
+                    if (i == this.CPUs[i].number) {
                         if (!CPUs[i].cardInHand(card)) {
                             this.target = i;
                         }
                     }
                 }
             }
-        } else if (this.trait == BULLY) {
+        } else if (this.trait == "BULLY") {
             this.target = 0; // player
-        } else if (this.trait == IQ1000GOD) {
+        } else if (this.trait == "IQ1000GOD") {
             if (player.cardInHand(card)) {
                 this.target = 0;
             } else {
                 for (var i = 0; i < CPUs.length; i++) {
-                    if (i == this.CPU.number) {
+                    if (i == this.CPUs[i].number) {
                         if (CPUs[i].cardInHand(card)) {
                             this.target = i;
                         }
@@ -208,41 +202,37 @@ class CPU {
                 }
             }
         }
-    }
-    getTarget() {
         return this.target;
     }
-    setCardWanted(number) {
-        if (this.trait == VEGETABLE) {
-
-        } else if (this.trait == BULLY) {
-            this.cardNumWanted = this.hand[Math.floor(Math.random() * this.hand.length)].number;
-        } else if (this.trait == IQ1000GOD) {
-
-        }
-    }
     getCardWanted() {
+        this.cardNumWanted = this.hand.hand[Math.floor(Math.random() * this.hand.length)].number;
+        // if (this.trait == VEGETABLE) {
+        //     this.cardNumWanted = Math.floor((Math.random()*13)+1);
+        //     if (this.cardInHand(card)){
+        //         // FIX UP THISSSSSSS  
+        //     }
+        // } else if (this.trait == BULLY) {
+        //     this.cardNumWanted = this.hand[Math.floor(Math.random() * this.hand.length)].number;
+        // } else if (this.trait == IQ1000GOD) {
+
+        // }
         return this.cardNumWanted;
     }
     recieveCard(card) {
         this.hand.addCard(card);
-        this.hasPairs();
-        // if (this.hand.hasPairs) {
-        //     checkPairs(this.hand.hand, this);
-        // }
     }
-    hasPairs(){
+    hasPairs() {
         console.log(this.hand.length);
-        if (this.hand.length == 1){
+        if (this.hand.length == 1) {
             this.hand.hasPairs = false;
-            console.log(this.name + " has no pairs.");                
-            return false; 
-        } else if (this.hand.length == 2){
+            console.log(this.name + " has no pairs.");
+            return false;
+        } else if (this.hand.length == 2) {
             if (this.hand.hand[0].number == this.hand.hand[1].number) {
                 this.hand.hasPairs = true;
-                console.log(this.name + " has a pair.");                
+                console.log(this.name + " has a pair.");
                 return true;
-            } 
+            }
         } else {
             for (var i = 0; i < this.hand.length - 1; i++) {
                 for (var j = (i + 1); j < this.hand.length; j++) {
@@ -255,14 +245,13 @@ class CPU {
             }
         }
         this.hand.hasPairs = false;
-        console.log(this.name + " has no pairs.");                
+        console.log(this.name + " has no pairs.");
         return false;
     }
     cardInHand(card) {
         return this.hand.cardPresent(card);
     }
     giveCard(card) {
-        // put it in the CPU#'s hand
         return this.hand.removeCard(card);
     }
     isHandEmpty() {
@@ -325,7 +314,7 @@ class Hand {
             }
         }
         var modHand = new Hand();
-        for (var i = 0; i<index; i++){
+        for (var i = 0; i < index; i++) {
             modHand.hand[i] = this.hand[i];
             modHand.length++;
         }
@@ -340,7 +329,7 @@ class Hand {
 }
 
 function checkPairs(hand, person) {
-    if (person.hasPairs()==false) {
+    if (person.hasPairs() == false) {
         return false;
     } else {
         for (var i = 0; i < hand.length; i++) {
@@ -374,14 +363,27 @@ function play(player) {
     while (!gameDone) {
         document.getElementById("ask").style.display = 'block';
         go(player);
+        sleep(1000);
         checkGame();
         for (var i = 0; i < numPlayers; i++) {
             document.getElementById("ask").style.display = 'none';
             go(CPUs[i]);
+            sleep(1000);
             checkGame();
-        } 
+            sleep(1000);
+        }
     }
     console.log(winner + " won the game!");
+}
+
+function sleep(milliseconds) {
+    // stack overflow credited
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++) {
+        if ((new Date().getTime() - start) > milliseconds) {
+            break;
+        }
+    }
 }
 
 function checkGame() {
@@ -399,72 +401,88 @@ function checkGame() {
 }
 
 function go(person) {
-    var numWant = person.cardNumWanted;
-    var target;
-    if (person.target == 0) {
-        target = person;
-    } else {
+    var numWant, target;
+    if (person.name == "You") {
+        numWant = person.cardNumWanted;
         target = CPUs[person.target - 1];
+    } else {
+        numWant = person.getCardWanted();
+        target = person.setTarget(numWant);
+        if (target == 0) {
+            target = person;
+        } else {
+            target = CPUs[target - 1];
+        }
     }
     console.log(target);
     if (target.cardInHand(numWant)) {
         var num = numWant;
         if (numWant == 1) {
             num = "A";
-        } else if (numWant == 11){
+        } else if (numWant == 11) {
             num = "J";
-        } else if (numWant == 12){
+        } else if (numWant == 12) {
             num = "Q";
-        } else if (numWant == 13){
+        } else if (numWant == 13) {
             num = "K";
         }
-        if (person.name == "You"){
+        if (person.name == "You") {
             alert("CPU" + person.target + " had a " + num + ". You now have a " + num + ".");
         } else {
-            alert("CPU" + person.target + " had a " + num + ". " + person.name + " now has a " + num + "."); 
+            alert("CPU" + person.target + " had a " + num + ". " + person.name + " now has a " + num + ".");
         }
         var suit = target.giveCard(numWant);
+        if (num == "A") {
+            num = 1;
+        } else if (num == "J") {
+            num = 11;
+        } else if (num == "Q") {
+            num = 12;
+        } else if (num == "K") {
+            num = 13;
+        }
         var card = new Card(num, suit);
-        
-                target.hand.removeCard(card); // SOMEHOW REMOVE THE EXACT CARD
-
         person.recieveCard(card);
         turnStart = false;
         checkPairs(person.hand.hand, person);
         status = "" + person + " recieved a " + num + " from " + target.name;
+        sleep(1000);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        draw();
         return;
     } else {
         var numSay1 = numWant;
         if (numWant == 1) {
             numSay1 = "A";
-        } else if (numWant == 11){
+        } else if (numWant == 11) {
             numSay1 = "J";
-        } else if (numWant == 12){
+        } else if (numWant == 12) {
             numSay1 = "Q";
-        } else if (numWant == 13){
+        } else if (numWant == 13) {
             numSay1 = "K";
         }
-        var num = Math.floor((Math.random()*13)+1);
+        var num = Math.floor((Math.random() * 13) + 1);
         var numSay2 = num;
         if (num == 1) {
             numSay2 = "A";
-        } else if (num == 11){
+        } else if (num == 11) {
             numSay2 = "J";
-        } else if (num == 12){
+        } else if (num == 12) {
             numSay2 = "Q";
-        } else if (num == 13){
+        } else if (num == 13) {
             numSay2 = "K";
         }
         // DONT LET IT WORK UNTIL THEY PICK A NUM AND PERSONNAME
         alert("CPU" + person.target + " did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".");
-        
-
         var suit = SUITS[Math.floor(Math.random() * SUITS.length)];
         var card = new Card(Math.floor(Math.random() * 13) + 1, suit);
         person.recieveCard(card);
         turnStart = false;
         checkPairs(person.hand.hand, person);
         status = "" + person + " couldn't get a " + numSay2 + " and picked up a " + card.num;
+        sleep(1000);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        draw();
         return;
     }
 }
@@ -553,6 +571,9 @@ function loadAllImgs() {
 }
 
 function draw() {
+    ctx.fillStyle = '#870000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
     // if game over
     // draw game over in center
     // return;
@@ -564,20 +585,24 @@ function draw() {
     var i = 10;
     var all = player.hand.hand;
     for (var c of all) {
-        var name = c.name;
-        var img = cards[c.name];
-        ctx.drawImage(img, 540 + i, 500, img.width / 4, img.height / 4);
-        i += 25;
+        if (c != null) {
+            var name = c.name;
+            var img = cards[c.name];
+            ctx.drawImage(img, 540 + i, 500, img.width / 4, img.height / 4);
+            i += 25;
+        }
     }
     if (CPUs.length == 1) {
         all = CPUs[0].hand.hand;
         var x = 418;
         for (var c of all) {
-            var name = c.name;
-            var img = cards[c.name];
-            ctx.drawImage(img, x+i, 75, img.width/4, img.height/4);
-            //ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
-            i += 25;
+            if (c != null) {
+                var name = c.name;
+                var img = cards[c.name];
+                ctx.drawImage(img, x + i, 75, img.width / 4, img.height / 4);
+                //ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
+                i += 25;
+            }
         }
         ctx.font = "18px Times New Roman";
         ctx.fillStyle = "white";
@@ -592,11 +617,13 @@ function draw() {
                 x = 550;
             }
             for (var c of all) {
-                var name = c.name;
-                var img = cards[c.name];
-                ctx.drawImage(img, x+i, 75, img.width/4, img.height/4);
-                //ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
-                i += 25;
+                if (c != null) {
+                    var name = c.name;
+                    var img = cards[c.name];
+                    ctx.drawImage(img, x + i, 75, img.width / 4, img.height / 4);
+                    //ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
+                    i += 25;
+                }
             }
             ctx.font = "18px Times New Roman";
             ctx.fillStyle = "white";
@@ -618,11 +645,13 @@ function draw() {
                 x = 550;
             }
             for (var c of all) {
-                var name = c.name;
-                var img = cards[c.name];
-                ctx.drawImage(img, x+i, 75, img.width/4, img.height/4);
-                // ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
-                i += 25;
+                if (c != null) {
+                    var name = c.name;
+                    var img = cards[c.name];
+                    ctx.drawImage(img, x + i, 75, img.width / 4, img.height / 4);
+                    // ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
+                    i += 25;
+                }
             }
             ctx.font = "18px Times New Roman";
             ctx.fillStyle = "white";
@@ -643,6 +672,6 @@ function draw() {
     //     ctx.textAlign = "center";
     //     ctx.fillText(status, (canvas.width/2)-20, 385);
     // }
-    ctx.fillText("GO FISH!", (canvas.width/2)-57, 385);
+    ctx.fillText("GO FISH!", (canvas.width / 2) - 57, 385);
     window.requestAnimationFrame(draw);
 }
