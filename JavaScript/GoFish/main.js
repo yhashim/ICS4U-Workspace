@@ -115,9 +115,9 @@ class Player {
         }
     }
     hasPairs(){
-        console.log(this.hand.size);
-        for (var i = 0; i < this.hand.size - 1; i++) {
-            for (var j = (i + 1); j < this.hand.size; j++) {
+        console.log(this.hand.length);
+        for (var i = 0; i < this.hand.length - 2; i++) {
+            for (var j = (i + 1); j < this.hand.length - 1; j++) {
                 if (this.hand.hand[i].number == this.hand.hand[j].number) {
                     this.hand.hasPairs = true;
                     console.log("Pair found for: " + this.name);
@@ -125,6 +125,7 @@ class Player {
                 }
             }
         }
+        this.hand.hasPairs = false;
         console.log("No pair found for: " + this.name);
         return false;
     }
@@ -135,7 +136,7 @@ class Player {
         return this.hand.removeCard(card);
     }
     isHandEmpty() {
-        return this.hand.size == 0;
+        return this.hand.length == 0;
     }
     refillHand() {
         if (this.hand.isHandEmpty()) {
@@ -202,7 +203,7 @@ class CPU {
         if (this.trait == VEGETABLE) {
 
         } else if (this.trait == BULLY) {
-            this.cardNumWanted = this.hand[Math.floor(Math.random() * this.hand.size)].number;
+            this.cardNumWanted = this.hand[Math.floor(Math.random() * this.hand.length)].number;
         } else if (this.trait == IQ1000GOD) {
 
         }
@@ -218,9 +219,9 @@ class CPU {
         }
     }
     hasPairs(){
-        console.log(this.hand.size);
-        for (var i = 0; i < this.hand.size - 1; i++) {
-            for (var j = (i + 1); j < this.hand.size; j++) {
+        console.log(this.hand.length);
+        for (var i = 0; i < this.hand.length - 2; i++) {
+            for (var j = (i + 1); j < this.hand.length - 1; j++) {
                 if (this.hand.hand[i].number == this.hand.hand[j].number) {
                     this.hand.hasPairs = true;
                     console.log("Pair found for: " + this.name);
@@ -228,6 +229,7 @@ class CPU {
                 }
             }
         }
+        this.hand.hasPairs = false;
         console.log("No pair found for: " + this.name);
         return false;
     }
@@ -239,7 +241,7 @@ class CPU {
         return this.hand.removeCard(card);
     }
     isHandEmpty() {
-        return this.hand.size == 0;
+        return this.hand.length == 0;
     }
     refillHand() {
         if (this.hand.isHandEmpty()) {
@@ -272,34 +274,34 @@ class Card {
 class Hand {
     constructor() {
         this.hand = [];
-        this.size = 0;
+        this.length = 0;
         this.hasPairs = true;
     }
     cardPresent(card) {
-        for (var i = 0; i < this.size; i++) {
+        for (var i = 0; i < this.length; i++) {
             if (this.hand[i].number == card) {
                 return true;
             }
         }
     }
     addCard(card) {
-        this.hand[this.size] = card;
-        this.size++;
+        this.hand[this.length] = card;
+        this.length++;
     }
     removeCard(card) {
         var index = 0;
         var suit;
-        for (var i = 0; i < this.size; i++) {
+        for (var i = 0; i < this.length; i++) {
             if (this.hand[i].number == card) {
                 index = i;
                 suit = this.hand[i].getSuit();
                 break;
             }
         }
-        for (var i = index + 1; i < this.size; i++) {
+        for (var i = index + 1; i < this.length; i++) {
             this.hand[i - 1] = this.hand[i];
         }
-        this.size--;
+        this.length--;
         return suit;
     }
 }
@@ -308,22 +310,21 @@ function checkPairs(hand, person) {
     if (person.hasPairs()==false) {
         return;
     } else {
-        for (var i = 0; i < hand.size; i++) {
-            for (var j = (i + 1); j < hand.size; j++) {
+        for (var i = 0; i < hand.length; i++) {
+            for (var j = (i + 1); j < hand.length; j++) {
                 if (hand[i].number == hand[j].number) {
-                    var oldHand = hand;
-                    var newHand = [];
+                    var newHand = new Hand();
                     hand[i] = null;
                     hand[j] = null;
                     var l = 0;
-                    for (var k = 0; k < hand.size; k++) {
+                    for (var k = 0; k < hand.length; k++) {
                         if (hand[k] != null) {
                             newHand.hand[l] = hand[k];
+                            newHand.length++;
                             l++;
                         }
                     }
                     hand = newHand;
-                    hand.size -= 2;
                     person.points++;
                     checkPairs(hand, person);
                 }
