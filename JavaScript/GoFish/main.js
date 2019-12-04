@@ -4,7 +4,6 @@ const NUM_CARDS = 5;
 const WIN_PTS = 10;
 var SUITS = ["hearts", "clubs", "diamonds", "spades"];
 
-
 var traits = []
 traits[0] = function IQ1000GOD() {
     // knows everyone's cards and who has what
@@ -17,6 +16,7 @@ traits[2] = function VEGETABLE() {
     // only asks for cards they don't have themselves
     // asks whoever doesn't have the card they want for it
 };
+
 var cards = [];
 var CPUs = [];
 var numPlayers;
@@ -24,12 +24,13 @@ var numPlayers;
 var canvas, ctx;
 var backgroundImg;
 
-var turn = 0;
-
 var gameDone = false;
 var turnStart;
 
 var player;
+var targetElem;
+
+var status;
 
 window.onload = function init() {
     loadAllImgs();
@@ -41,28 +42,33 @@ window.onload = function init() {
 }
 
 function begin(num) {
+    numPlayers = num - 1; 
     document.getElementById("title").style.display = 'none';
-
     document.getElementById("b1").style.display = 'none';
     document.getElementById("b2").style.display = 'none';
     document.getElementById("b3").style.display = 'none';
-
     document.getElementById("num").style.display = 'block';
-    document.getElementById("target").style.display = 'block';
-
+    if (numPlayers==1){
+        document.getElementById("target1").style.display = 'block';
+        targetElem = 1;
+    } else if (numPlayers==2){
+        document.getElementById("target2").style.display = 'block';
+        targetElem = 2;
+    } else {
+        document.getElementById("target3").style.display = 'block';
+        targetElem = 3; 
+    }
     document.getElementById("text1").style.display = 'block';
     document.getElementById("text2").style.display = 'block';
-
     document.getElementById("ask").style.display = 'block';
-
+    status = "Game initialized";
     player = new Player();
     for (var i = 0; i < NUM_CARDS; i++) {
         var suit = SUITS[Math.floor(Math.random() * SUITS.length)];
         var randomCard = new Card(Math.floor(Math.random() * 13) + 1, suit);
         player.recieveCard(randomCard);
     }
-    checkPairs(player.hand, player);
-    numPlayers = num - 1; 
+    checkPairs(player.hand.hand, player);
     for (var i = 0; i < numPlayers; i++) {
         var trait = traits[Math.floor(Math.random() * traits.length)];
         CPUs[i] = new CPU(i, trait);
@@ -71,101 +77,15 @@ function begin(num) {
             var randomCard = new Card(Math.floor(Math.random() * 13) + 1, suit);
             CPUs[i].recieveCard(randomCard);
         }
-        checkPairs(CPUs[i].hand, CPUs[i]);
+        checkPairs(CPUs[i].hand.hand, CPUs[i]);
     }
     draw();
-}
-
-function draw() {
-    // if game over
-    // draw game over in center
-    // return;
-    // else
-    // do drawy stuff
-    // draw player at bottom of screen
-    // draw cpus
-    // draw them based on num cpus
-    var i = 10;
-    var all = player.hand.hand;
-    for (var c of all) {
-        var name = c.name;
-        var img = cards[c.name];
-        ctx.drawImage(img, 540 + i, 500, img.width / 4, img.height / 4);
-        i += 25;
-    }
-    if (CPUs.length == 1) {
-        all = CPUs[0].hand.hand;
-        var x = 418;
-        for (var c of all) {
-            var card = all[c];
-            ctx.drawImage(cards[c.name], x+i, 75, cards[c.name].width/4, cards[c.name].height/4);
-            //ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
-            i += 25;
-        }
-        ctx.font = "18px Times New Roman";
-        ctx.fillStyle = "white";
-        ctx.fillText("Points: " + CPUs[0].points, 640, 50);
-    } else if (CPUs.length == 2) {
-        for (var j = 0; j < CPUs.length; j++) {
-            all = CPUs[j].hand.hand;
-            var x;
-            if (j == 0) {
-                x = 145;
-            } else {
-                x = 550;
-            }
-            for (var c of all) {
-                var card = all[c];
-                ctx.drawImage(cards[c.name], x+i, 75, cards[c.name].width/4, cards[c.name].height/4);
-                //ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
-                i += 25;
-            }
-            ctx.font = "18px Times New Roman";
-            ctx.fillStyle = "white";
-            if (j == 0) {
-                ctx.fillText("Points: " + CPUs[j].points, 360, 50);
-            } else {
-                ctx.fillText("Points: " + CPUs[j].points, 900, 50);
-            }
-        }
-    } else if (CPUs.length == 3) {
-        for (var j = 0; j < CPUs.length; j++) {
-            all = CPUs[j].hand.hand;
-            var x;
-            if (j == 0) {
-                x = 20;
-            } else if (j == 1) {
-                x = 285;
-            } else {
-                x = 550;
-            }
-            for (var c of all) {
-                var card = all[c];
-                ctx.drawImage(cards[c.name], x+i, 75, cards[c.name].width/4, cards[c.name].height/4);
-                // ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
-                i += 25;
-            }
-            ctx.font = "18px Times New Roman";
-            ctx.fillStyle = "white";
-            if (j == 0) {
-                ctx.fillText("Points: " + CPUs[j].points, 240, 50);
-            } else if (j == 1) {
-                ctx.fillText("Points: " + CPUs[j].points, 630, 50);
-            } else {
-                ctx.fillText("Points: " + CPUs[j].points, 1025, 50);
-            }
-        }
-    }
-    ctx.font = "18px Times New Roman";
-    ctx.fillStyle = "white";
-    ctx.fillText("Points: " + player.points, 780, 728);
-    window.requestAnimationFrame(draw);
 }
 
 class Player {
     constructor() {
         this.name = "You";
-        this.hand = new Hand(this);
+        this.hand = new Hand();
         this.points = 0;
         this.target;
         this.cardNumWanted;
@@ -177,7 +97,7 @@ class Player {
         return this.points;
     }
     setCardAndTarg() {
-        this.target = document.getElementById("target").value;
+        this.target = document.getElementById("target"+targetElem).value;
         this.cardNumWanted = document.getElementById("num").value;
         play(this);
     }
@@ -189,9 +109,24 @@ class Player {
     }
     recieveCard(card) {
         this.hand.addCard(card);
-        if (this.hand.hasPairs()) {
-            checkPairs(this.hand);
+        this.hasPairs();
+        if (this.hand.hasPairs) {
+            checkPairs(this.hand.hand, this);
         }
+    }
+    hasPairs(){
+        console.log(this.hand.size);
+        for (var i = 0; i < this.hand.size - 1; i++) {
+            for (var j = (i + 1); j < this.hand.size; j++) {
+                if (this.hand.hand[i].number == this.hand.hand[j].number) {
+                    this.hand.hasPairs = true;
+                    console.log("Pair found for: " + this.name);
+                    return true;
+                }
+            }
+        }
+        console.log("No pair found for: " + this.name);
+        return false;
     }
     cardInHand(card) {
         return this.hand.cardPresent(card);
@@ -220,7 +155,7 @@ class CPU {
         this.number = number;
         this.name = "CPU" + number;
         this.trait = trait;
-        this.hand = new Hand(this);
+        this.hand = new Hand();
         this.points = 0;
         this.target;
         this.cardNumWanted;
@@ -267,7 +202,7 @@ class CPU {
         if (this.trait == VEGETABLE) {
 
         } else if (this.trait == BULLY) {
-            this.cardNumWanted = this.hand[Math.floor(Math.random() * this.hand.size)].getCardNumber();
+            this.cardNumWanted = this.hand[Math.floor(Math.random() * this.hand.size)].number;
         } else if (this.trait == IQ1000GOD) {
 
         }
@@ -277,9 +212,24 @@ class CPU {
     }
     recieveCard(card) {
         this.hand.addCard(card);
-        if (this.hand.hasPairs()) {
-            checkPairs(this.hand);
+        this.hasPairs();
+        if (this.hand.hasPairs) {
+            checkPairs(this.hand.hand, this);
         }
+    }
+    hasPairs(){
+        console.log(this.hand.size);
+        for (var i = 0; i < this.hand.size - 1; i++) {
+            for (var j = (i + 1); j < this.hand.size; j++) {
+                if (this.hand.hand[i].number == this.hand.hand[j].number) {
+                    this.hand.hasPairs = true;
+                    console.log("Pair found for: " + this.name);
+                    return true;
+                }
+            }
+        }
+        console.log("No pair found for: " + this.name);
+        return false;
     }
     cardInHand(card) {
         return this.hand.cardPresent(card);
@@ -323,10 +273,11 @@ class Hand {
     constructor() {
         this.hand = [];
         this.size = 0;
+        this.hasPairs = true;
     }
     cardPresent(card) {
         for (var i = 0; i < this.size; i++) {
-            if (this.hand[i].getCardNumber() == card) {
+            if (this.hand[i].number == card) {
                 return true;
             }
         }
@@ -334,13 +285,12 @@ class Hand {
     addCard(card) {
         this.hand[this.size] = card;
         this.size++;
-        // this.findMatches(); for some reason this makes everyone have no cards at game start
     }
     removeCard(card) {
         var index = 0;
         var suit;
         for (var i = 0; i < this.size; i++) {
-            if (this.hand[i].getCardNumber() == card) {
+            if (this.hand[i].number == card) {
                 index = i;
                 suit = this.hand[i].getSuit();
                 break;
@@ -352,25 +302,15 @@ class Hand {
         this.size--;
         return suit;
     }
-    hasPairs() {
-        for (var i = 0; i < this.hand.size - 1; i++) {
-            for (var j = i + 1; j < this.hand.size; j++) {
-                if (this.hand[i].getCardNumber() == this.hand[j].getCardNumber()) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 }
 
-function checkPairs(hand, player) {
-    if (!hand.hasPairs) {
+function checkPairs(hand, person) {
+    if (person.hasPairs()==false) {
         return;
     } else {
         for (var i = 0; i < hand.size; i++) {
-            for (var j = i + 1; j < hand.size; j++) {
-                if (hand[i] == hand[j]) {
+            for (var j = (i + 1); j < hand.size; j++) {
+                if (hand[i].number == hand[j].number) {
                     var oldHand = hand;
                     var newHand = [];
                     hand[i] = null;
@@ -378,14 +318,14 @@ function checkPairs(hand, player) {
                     var l = 0;
                     for (var k = 0; k < hand.size; k++) {
                         if (hand[k] != null) {
-                            newHand[l] = hand[k];
+                            newHand.hand[l] = hand[k];
                             l++;
                         }
                     }
                     hand = newHand;
                     hand.size -= 2;
-                    player.points++;
-                    checkPairs(hand, player);
+                    person.points++;
+                    checkPairs(hand, person);
                 }
             }
         }
@@ -402,18 +342,18 @@ function play(player) {
             document.getElementById("ask").style.display = 'none';
             go(CPUs[i]);
             checkGame();
-        }
+        } 
     }
     console.log(winner + " won the game!");
 }
 
 function checkGame() {
-    if (player.getPoints() >= 10) {
+    if (player.points >= 10) {
         gameDone = true;
         return player;
     }
     for (var i = 0; i < CPUs.length; i++) {
-        if (CPUs[i].getPoints() >= 10) {
+        if (CPUs[i].points >= 10) {
             gameDone = true;
             return CPU[i];
         }
@@ -424,22 +364,13 @@ function checkGame() {
 function go(person) {
     var numWant = person.cardNumWanted;
     var target;
-    // var numPres;
-    // if (numWant == 1) {
-    //         numPres = "A";
-    //     } else if (numWant == 11){
-    //         numPres = "J";
-    //     } else if (numWant == 12){
-    //         numPres = "Q";
-    //     } else if (numWant == 13){
-    //         numPres = "K";
-    //     }
     if (person.target == 0) {
         target = person;
     } else {
         target = CPUs[person.target - 1];
     }
-    if (target.hand.cardPresent(numWant)) {
+    console.log(target);
+    if (target.cardInHand(numWant)) {
         var num = numWant;
         if (numWant == 1) {
             num = "A";
@@ -458,11 +389,12 @@ function go(person) {
         var suit = target.giveCard(num);
         var card = new Card(num, suit);
         
-                target.removeCard(card); // SOMEHOW REMOVE THE EXACT CARD
+                target.hand.removeCard(card); // SOMEHOW REMOVE THE EXACT CARD
 
         person.recieveCard(card);
         turnStart = false;
-        checkPairs(person.hand, person);
+        checkPairs(person.hand.hand, person);
+        status = "" + person + " recieved a " + num + " from " + target.name;
         return;
     } else {
         var numSay1 = numWant;
@@ -489,10 +421,11 @@ function go(person) {
         // DONT LET IT WORK UNTIL THEY PICK A NUM AND PERSONNAME
         alert("CPU" + person.target + " did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".");
         var suit = SUITS[Math.floor(Math.random() * SUITS.length)];
-        var card = new Card(num, suit);
+        var card = new Card(Math.floor(Math.random() * 13) + 1, suit);
         person.recieveCard(card);
         turnStart = false;
-        checkPairs(person.hand, person);
+        checkPairs(person.hand.hand, person);
+        status = "" + person + " couldn't get a " + numSay2 + " and picked up a " + card.num;
         return;
     }
 }
@@ -577,4 +510,96 @@ function getCard() {
     } else {
         return "A";
     }
+}
+
+function draw() {
+    // if game over
+    // draw game over in center
+    // return;
+    // else
+    // do drawy stuff
+    // draw player at bottom of screen
+    // draw cpus
+    // draw them based on num cpus
+    var i = 10;
+    var all = player.hand.hand;
+    for (var c of all) {
+        var name = c.name;
+        var img = cards[c.name];
+        ctx.drawImage(img, 540 + i, 500, img.width / 4, img.height / 4);
+        i += 25;
+    }
+    if (CPUs.length == 1) {
+        all = CPUs[0].hand.hand;
+        var x = 418;
+        for (var c of all) {
+            // var card = all[c];
+            ctx.drawImage(cards[c.name], x+i, 75, cards[c.name].width/4, cards[c.name].height/4);
+            //ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
+            i += 25;
+        }
+        ctx.font = "18px Times New Roman";
+        ctx.fillStyle = "white";
+        ctx.fillText("Points: " + CPUs[0].points, 640, 50);
+    } else if (CPUs.length == 2) {
+        for (var j = 0; j < CPUs.length; j++) {
+            all = CPUs[j].hand.hand;
+            var x;
+            if (j == 0) {
+                x = 145;
+            } else {
+                x = 550;
+            }
+            for (var c of all) {
+                // var card = all[c];
+                ctx.drawImage(cards[c.name], x+i, 75, cards[c.name].width/4, cards[c.name].height/4);
+                //ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
+                i += 25;
+            }
+            ctx.font = "18px Times New Roman";
+            ctx.fillStyle = "white";
+            if (j == 0) {
+                ctx.fillText("Points: " + CPUs[j].points, 360, 50);
+            } else {
+                ctx.fillText("Points: " + CPUs[j].points, 900, 50);
+            }
+        }
+    } else if (CPUs.length == 3) {
+        for (var j = 0; j < CPUs.length; j++) {
+            all = CPUs[j].hand.hand;
+            var x;
+            if (j == 0) {
+                x = 20;
+            } else if (j == 1) {
+                x = 285;
+            } else {
+                x = 550;
+            }
+            for (var c of all) {
+                // var card = all[c];
+                ctx.drawImage(cards[c.name], x+i, 75, cards[c.name].width/4, cards[c.name].height/4);
+                // ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
+                i += 25;
+            }
+            ctx.font = "18px Times New Roman";
+            ctx.fillStyle = "white";
+            if (j == 0) {
+                ctx.fillText("Points: " + CPUs[j].points, 240, 50);
+            } else if (j == 1) {
+                ctx.fillText("Points: " + CPUs[j].points, 630, 50);
+            } else {
+                ctx.fillText("Points: " + CPUs[j].points, 1025, 50);
+            }
+        }
+    }
+    ctx.font = "18px Times New Roman";
+    ctx.fillStyle = "white";
+    ctx.fillText("Points: " + player.points, 780, 728);
+    // var scope = true;
+    // if (scope) {
+    //     ctx.textAlign = "center";
+    //     ctx.fillText(status, (canvas.width/2)-20, 385);
+    // }
+    ctx.fillText("GO FISH!", (canvas.width/2)-57, 385);
+    window.requestAnimationFrame(draw);
 }
