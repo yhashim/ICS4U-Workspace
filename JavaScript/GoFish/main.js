@@ -110,9 +110,9 @@ class Player {
     recieveCard(card) {
         this.hand.addCard(card);
         this.hasPairs();
-        if (this.hand.hasPairs) {
-            checkPairs(this.hand.hand, this);
-        }
+        // if (this.hand.hasPairs) {
+        //     checkPairs(this.hand.hand, this);
+        // }
     }
     hasPairs(){
         console.log(this.hand.length);
@@ -214,9 +214,9 @@ class CPU {
     recieveCard(card) {
         this.hand.addCard(card);
         this.hasPairs();
-        if (this.hand.hasPairs) {
-            checkPairs(this.hand.hand, this);
-        }
+        // if (this.hand.hasPairs) {
+        //     checkPairs(this.hand.hand, this);
+        // }
     }
     hasPairs(){
         console.log(this.hand.length);
@@ -326,7 +326,7 @@ function checkPairs(hand, person) {
                     }
                     hand = newHand;
                     person.points++;
-                    checkPairs(hand, person);
+                    checkPairs(hand.hand, person);
                 }
             }
         }
@@ -534,7 +534,6 @@ function draw() {
         all = CPUs[0].hand.hand;
         var x = 418;
         for (var c of all) {
-            // var card = all[c];
             ctx.drawImage(cards[c.name], x+i, 75, cards[c.name].width/4, cards[c.name].height/4);
             //ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
             i += 25;
@@ -552,7 +551,6 @@ function draw() {
                 x = 550;
             }
             for (var c of all) {
-                // var card = all[c];
                 ctx.drawImage(cards[c.name], x+i, 75, cards[c.name].width/4, cards[c.name].height/4);
                 //ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
                 i += 25;
@@ -577,7 +575,6 @@ function draw() {
                 x = 550;
             }
             for (var c of all) {
-                // var card = all[c];
                 ctx.drawImage(cards[c.name], x+i, 75, cards[c.name].width/4, cards[c.name].height/4);
                 // ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
                 i += 25;
