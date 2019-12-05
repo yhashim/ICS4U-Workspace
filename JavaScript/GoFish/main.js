@@ -362,7 +362,11 @@ function play(player) {
             gameDone = true;
         }
         document.getElementById("ask").style.display = 'block';
+        sleep(250);
+        console.log(player.name + " start go");
         go(player);
+        sleep(250);
+        console.log(player.name + " done");
         // sleep(500);
         winner = checkGame();
         // sleep(500);
@@ -374,12 +378,17 @@ function play(player) {
                 // sketchy stuffs
                 // var go = new Promise(function(){go(CPUs[i]);},1000);
                 // go;
-            setTimeout(function(){go(CPUs[i]);},1000);
+            //setTimeout(function(){go(CPUs[i]);},1000);
+            sleep(250);
+            console.log(CPUs[i].name + " start go");
+            go(CPUs[i]);
             // sleep(500);
             winner = checkGame();
             // sleep(500);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             draw();
+            sleep(250);
+            console.log(CPUs[i].name + " end");
         }
         //sleep(500);
     }
@@ -698,6 +707,6 @@ function draw() {
     //     ctx.textAlign = "center";
     //     ctx.fillText(status, (canvas.width/2)-20, 385);
     // }
-    ctx.fillText(status, (canvas.width / 2)-status.length, 385);
+    ctx.fillText(status, (canvas.width / 2)-status.length*5, 385);
     window.requestAnimationFrame(draw);
 }
