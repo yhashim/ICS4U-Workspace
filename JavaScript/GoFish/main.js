@@ -350,9 +350,9 @@ function checkPairs(hand, person) {
 function play(player) {
     var winner = checkGame();
     if (winner != null) {
-        var cpuName = person.name;
-        if (person.name != "You"){
-            cpuName = "CPU" + (person.number+1);
+        var cpuName = winner.name;
+        if (winner.name != "You"){
+            cpuName = "CPU" + (winner.number+1);
         }
         status = cpuName + " won the game!";
         alert(status);
@@ -360,20 +360,16 @@ function play(player) {
         return;
     }
     document.getElementById("ask").style.display = 'block';
-    sleep(250);
-    console.log(player.name + " start go");
     go(player);
     player.refillHand();
     for (var i = 0; i < CPUs.length; i++) {
         CPUs[i].refillHand();
     }
-    sleep(250);
-    console.log(player.name + " done");
     winner = checkGame();
     if (winner != null) {
-        var cpuName = person.name;
-        if (person.name != "You"){
-            cpuName = "CPU" + (person.number+1);
+        var cpuName = winner.name;
+        if (winner.name != "You"){
+            cpuName = "CPU" + (winner.number+1);
         }
         status = cpuName + " won the game!";
         alert(status);
@@ -388,8 +384,6 @@ function play(player) {
             break;
         }
         document.getElementById("ask").style.display = 'none';
-        sleep(250);
-        console.log(CPUs[i].name + " start go");
         go(CPUs[i]);
         player.refillHand();
         for (var j = 0; i < CPUs.length; j++) {
@@ -401,9 +395,9 @@ function play(player) {
         }
         winner = checkGame();
         if (winner != null) {
-            var cpuName = person.name;
-            if (person.name != "You"){
-                cpuName = "CPU" + (person.number+1);
+            var cpuName = winner.name;
+            if (winner.name != "You"){
+                cpuName = "CPU" + (winner.number+1);
             }
             status = cpuName + " won the game!";
             alert(status);
@@ -412,13 +406,12 @@ function play(player) {
         }
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         draw();
-        sleep(250);
         console.log(CPUs[i].name + " end");
         winner = checkGame();
         if (winner != null) {
-            var cpuName = person.name;
-            if (person.name != "You"){
-                cpuName = "CPU" + (person.number+1);
+            var cpuName = winner.name;
+            if (winner.name != "You"){
+                cpuName = "CPU" + (winner.number+1);
             }
             status = cpuName + " won the game!";
             alert(status);
@@ -429,9 +422,9 @@ function play(player) {
     document.getElementById("ask").style.display = 'block';
     winner = checkGame();
     if (winner != null) {
-        var cpuName = person.name;
-        if (person.name != "You"){
-            cpuName = "CPU" + (person.number+1);
+        var cpuName = winner.name;
+        if (winner.name != "You"){
+            cpuName = "CPU" + (winner.number+1);
         }
         status = cpuName + " won the game!";
         alert(status);
@@ -689,9 +682,9 @@ function loadAllImgs() {
 function draw() {
     winner = checkGame();
     if (winner != null) {
-        var cpuName = person.name;
-        if (person.name != "You"){
-            cpuName = "CPU" + (person.number+1);
+        var cpuName = winner.name;
+        if (winner.name != "You"){
+            cpuName = "CPU" + (winner.number+1);
         }
         status = cpuName + " won the game!";
         alert(status);
@@ -712,7 +705,7 @@ function draw() {
     }
     if (CPUs.length == 1) {
         all = CPUs[0].hand.hand;
-        var x = 418;
+        var x = 425;
         for (var c of all) {
             if (c != null) {
                 var name = c.name;
@@ -723,15 +716,15 @@ function draw() {
         }
         ctx.font = "18px Times New Roman";
         ctx.fillStyle = "white";
-        ctx.fillText("Points: " + CPUs[0].points, 640, 50);
+        ctx.fillText("CPU1 Points: " + CPUs[0].points, 620, 50);
     } else if (CPUs.length == 2) {
         for (var j = 0; j < CPUs.length; j++) {
             all = CPUs[j].hand.hand;
             var x;
             if (j == 0) {
-                x = 145;
+                x = 165;
             } else {
-                x = 550;
+                x = 570;
             }
             for (var c of all) {
                 if (c != null) {
@@ -744,9 +737,9 @@ function draw() {
             ctx.font = "18px Times New Roman";
             ctx.fillStyle = "white";
             if (j == 0) {
-                ctx.fillText("Points: " + CPUs[j].points, 360, 50);
+                ctx.fillText("CPU" + (CPUs[j].number+1) + " Points: " + CPUs[j].points, 360, 50);
             } else {
-                ctx.fillText("Points: " + CPUs[j].points, 900, 50);
+                ctx.fillText("CPU" + (CPUs[j].number+1) + " Points: " + CPUs[j].points, 900, 50);
             }
         }
     } else if (CPUs.length == 3) {
@@ -756,9 +749,9 @@ function draw() {
             if (j == 0) {
                 x = 20;
             } else if (j == 1) {
-                x = 285;
+                x = 300;
             } else {
-                x = 550;
+                x = 570;
             }
             for (var c of all) {
                 if (c != null) {
@@ -771,11 +764,11 @@ function draw() {
             ctx.font = "18px Times New Roman";
             ctx.fillStyle = "white";
             if (j == 0) {
-                ctx.fillText("Points: " + CPUs[j].points, 240, 50);
+                ctx.fillText("CPU" + (CPUs[j].number+1) + " Points: " + CPUs[j].points, 240, 50);
             } else if (j == 1) {
-                ctx.fillText("Points: " + CPUs[j].points, 630, 50);
+                ctx.fillText("CPU" + (CPUs[j].number+1) + " Points: " + CPUs[j].points, 630, 50);
             } else {
-                ctx.fillText("Points: " + CPUs[j].points, 1025, 50);
+                ctx.fillText("CPU" + (CPUs[j].number+1) + " Points: " + CPUs[j].points, 1025, 50);
             }
         }
     }
