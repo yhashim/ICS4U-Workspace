@@ -148,7 +148,9 @@ class Player {
     refillHand() {
         if (this.hand.isHandEmpty()) {
             for (var i = 0; i < NUM_CARDS; i++) {
-                drawCard();
+                var suit = SUITS[Math.floor(Math.random() * SUITS.length)];
+                var randomCard = new Card(Math.floor(Math.random() * 13) + 1, suit);
+                this.recieveCard(randomCard);
             }
         }
     }
@@ -260,7 +262,9 @@ class CPU {
     refillHand() {
         if (this.hand.isHandEmpty()) {
             for (var i = 0; i < NUM_CARDS; i++) {
-                drawCard();
+                var suit = SUITS[Math.floor(Math.random() * SUITS.length)];
+                var randomCard = new Card(Math.floor(Math.random() * 13) + 1, suit);
+                this.recieveCard(randomCard);
             }
         }
     }
