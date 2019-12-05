@@ -139,7 +139,7 @@ class Player {
         return this.hand.length == 0;
     }
     refillHand() {
-        if (this.hand.isHandEmpty()) {
+        if (this.hand.length == 0) {
             for (var i = 0; i < NUM_CARDS; i++) {
                 var suit = SUITS[Math.floor(Math.random() * SUITS.length)];
                 var randomCard = new Card(Math.floor(Math.random() * 13) + 1, suit);
@@ -248,7 +248,7 @@ class CPU {
         return this.hand.length == 0;
     }
     refillHand() {
-        if (this.hand.isHandEmpty()) {
+        if (this.hand.length == 0) {
             for (var i = 0; i < NUM_CARDS; i++) {
                 var suit = SUITS[Math.floor(Math.random() * SUITS.length)];
                 var randomCard = new Card(Math.floor(Math.random() * 13) + 1, suit);
@@ -365,6 +365,10 @@ function play(player) {
         sleep(250);
         console.log(player.name + " start go");
         go(player);
+        player.refillHand();
+        for (var i = 0; i<CPUs.length; i++){
+            CPUs[i].refillHand();
+        }
         sleep(250);
         console.log(player.name + " done");
         // sleep(500);
@@ -382,6 +386,10 @@ function play(player) {
             sleep(250);
             console.log(CPUs[i].name + " start go");
             go(CPUs[i]);
+            player.refillHand();
+            for (var i = 0; i<CPUs.length; i++){
+                CPUs[i].refillHand();
+            }
             // sleep(500);
             winner = checkGame();
             // sleep(500);
