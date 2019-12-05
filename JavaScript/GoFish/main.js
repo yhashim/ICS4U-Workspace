@@ -340,11 +340,11 @@ function checkPairs(hand, person) {
 }
 
 function play(player) {
-    var winner = checkGame();
-    while (!gameDone) {
-        if (winner != null){
-            gameDone = true;
-        }
+    // var winner = checkGame();
+    // while (!gameDone) {
+    //     if (winner != null){
+    //         gameDone = true;
+    //     }
         document.getElementById("ask").style.display = 'block';
         sleep(250);
         console.log(player.name + " start go");
@@ -401,9 +401,10 @@ function play(player) {
             sleep(250);
             console.log(CPUs[i].name + " end");
         }
-        //sleep(500);
-    }
-    status = winner.name + " won the game!";
+        document.getElementById("ask").style.display = 'block';
+         /////////sleep(500);
+//     }
+//     status = winner.name + " won the game!";
 }
 
 function sleep(milliseconds) {
