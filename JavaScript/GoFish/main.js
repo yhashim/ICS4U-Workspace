@@ -6,13 +6,8 @@ var SUITS = ["hearts", "clubs", "diamonds", "spades"];
 
 var traits = []
 traits[0] = "IQ1000GOD";
-// knows everyone's cards and who has what
-// always gets what they want
 traits[1] = "BULLY";
-// targets the player only
-traits[2] = "veggie";
-// only asks for cards they don't have themselves
-// asks whoever doesn't have the card they want for it
+traits[2] = "veggie"; // asks whoever doesn't have the card they want for it
 
 
 var cards = [];
@@ -64,7 +59,6 @@ function begin(num) {
         var randomCard = new Card(Math.floor(Math.random() * 13) + 1, suit);
         player.recieveCard(randomCard);
     }
-    // IS THE ISSUE AUTOMATIC BASE CASE SO ITS NOT CHECKING? FIX BOOLEANS MAYBE?
     checkPairs(player.hand.hand, player);
     for (var i = 0; i < numPlayers; i++) {
         var trait = traits[Math.floor(Math.random() * traits.length)];
@@ -201,16 +195,6 @@ class CPU {
     }
     getCardWanted() {
         this.cardNumWanted = this.hand.hand[Math.floor(Math.random() * this.hand.length)].number;
-        // if (this.trait == VEGETABLE) {
-        //     this.cardNumWanted = Math.floor((Math.random()*13)+1);
-        //     if (this.cardInHand(card)){
-        //         // FIX UP THISSSSSSS  
-        //     }
-        // } else if (this.trait == BULLY) {
-        //     this.cardNumWanted = this.hand[Math.floor(Math.random() * this.hand.length)].number;
-        // } else if (this.trait == IQ1000GOD) {
-
-        // }
         return this.cardNumWanted;
     }
     recieveCard(card) {
@@ -377,6 +361,10 @@ function play(player) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         draw();
         for (var i = 0; i < CPUs.length; i++) {
+            if (CPUs[i] == null){
+                console.log("BAD");
+                break;
+            }
             document.getElementById("ask").style.display = 'none';
             //sleep(500);
                 // sketchy stuffs
@@ -387,8 +375,23 @@ function play(player) {
             console.log(CPUs[i].name + " start go");
             go(CPUs[i]);
             player.refillHand();
-            for (var i = 0; i<CPUs.length; i++){
-                CPUs[i].refillHand();
+            for (var j = 0; i<CPUs.length; j++){
+                if (CPUs[j] == null){
+                    console.log("BAD");
+                    break;
+                }
+                CPUs[j].refillHand(); 
+                // WHY ALWAYS UNDEFINED?!?!?!
+                // WHAT THE HECK WHY IS THIS SO MESSED UP
+                // CALLED THE REFILL HAND
+                // BUT EVERYTHING PASSED IN IS UNDEF?
+                // WHY IS THIS HAPPENING?
+                // WHY IS CPUS[J] APPARENTLY UNDEFINED
+                // IT MAKES ABSOLUTELY NO SENSE
+                // I DONT SEE IT
+                // I BET DLO WOULD FIGURE IT OUT IN SECONDS
+                // I NEED CS SKILLS PLS DONATE 2%
+                // ID DO 90% BETTER IF I HAD JUST 2% UR SKILLS PLS
             }
             // sleep(500);
             winner = checkGame();
@@ -616,15 +619,6 @@ function loadAllImgs() {
 function draw() {
     ctx.fillStyle = '#870000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    //ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // if game over
-    // draw game over in center
-    // return;
-    // else
-    // do drawy stuff
-    // draw player at bottom of screen
-    // draw cpus
-    // draw them based on num cpus
     var i = 10;
     var all = player.hand.hand;
     for (var c of all) {
@@ -710,11 +704,6 @@ function draw() {
     ctx.font = "18px Times New Roman";
     ctx.fillStyle = "white";
     ctx.fillText("Points: " + player.points, 780, 728);
-    // var scope = true;
-    // if (scope) {
-    //     ctx.textAlign = "center";
-    //     ctx.fillText(status, (canvas.width/2)-20, 385);
-    // }
     ctx.fillText(status, (canvas.width / 2)-status.length*5, 385);
     window.requestAnimationFrame(draw);
 }
