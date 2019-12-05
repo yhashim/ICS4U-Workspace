@@ -381,7 +381,7 @@ function play(player) {
         draw();
         for (var i = 0; i < CPUs.length; i++) {
             document.getElementById("ask").style.display = 'none';
-            sleep(500);
+            //sleep(500);
             go(CPUs[i]);
             // sleep(500);
             checkGame();
@@ -389,7 +389,7 @@ function play(player) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             draw();
         }
-        sleep(500);
+        //sleep(500);
     }
     status = winner + " won the game!";
 }
@@ -445,7 +445,7 @@ function go(person) {
             num = "K";
         }
         if (person.name == "You") {
-            //alert("You recieved a " + num + " from CPU" + person.target);
+            alert("You recieved a " + num + " from CPU" + person.target);
             status =  "You recieved a " + num + " from CPU" + person.target;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             draw();
@@ -454,7 +454,7 @@ function go(person) {
             if (person.target != -1){
                 who = "CPU" + person.target;
             }
-            //alert(person.name + " recieved a " + num + " from " + who);
+            alert(person.name + " recieved a " + num + " from " + who);
             status = person.name + " recieved a " + num + " from " + who;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             draw();
@@ -473,10 +473,10 @@ function go(person) {
         person.recieveCard(card);
         turnStart = false;
         checkPairs(person.hand.hand, person);
-        sleep(500);
+        //sleep(500);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         draw();
-        sleep(500);
+        //sleep(500);
         return;
     } else {
         var numSay1 = numWant;
@@ -502,10 +502,10 @@ function go(person) {
         }
         // DONT LET IT WORK UNTIL THEY PICK A NUM AND PERSONNAME
         if (person.target == -1){
-            //alert("You did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".");
+            alert("You did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".");
             status = "You did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".";
         } else {
-            //alert("CPU" + person.target + " did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".");
+            alert("CPU" + person.target + " did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".");
             status = "CPU" + person.target + " did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".";
         }
         var suit = SUITS[Math.floor(Math.random() * SUITS.length)];
@@ -513,10 +513,10 @@ function go(person) {
         person.recieveCard(card);
         turnStart = false;
         checkPairs(person.hand.hand, person);
-        sleep(500);
+        //sleep(500);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         draw();
-        sleep(500);
+        //sleep(500);
         return;
     }
 }
