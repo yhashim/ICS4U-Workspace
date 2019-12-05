@@ -344,7 +344,6 @@ function checkPairs(hand, person) {
                     }
                     person.hand = newHand;
                     person.points++;
-                    //alert(person.name + " had a pair removed."); // DO SOMETHING SO THIS ALERT DOESNT HAPPEN BEFORE THE GAME LOADS 
                     escape = true;
                 }
                 if (escape){
@@ -359,10 +358,13 @@ function checkPairs(hand, person) {
 function play(player) {
     var winner = checkGame();
     while (!gameDone) {
+        if (winner != null){
+            gameDone = true;
+        }
         document.getElementById("ask").style.display = 'block';
         go(player);
         // sleep(500);
-        checkGame();
+        winner = checkGame();
         // sleep(500);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         draw();
@@ -374,7 +376,7 @@ function play(player) {
                 // go;
             setTimeout(function(){go(CPUs[i]);},1000);
             // sleep(500);
-            checkGame();
+            winner = checkGame();
             // sleep(500);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             draw();
@@ -434,7 +436,7 @@ function go(person) {
             num = "K";
         }
         if (person.name == "You") {
-            alert("You recieved a " + num + " from CPU" + person.target);
+            //alert("You recieved a " + num + " from CPU" + person.target);
             status =  "You recieved a " + num + " from CPU" + person.target;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             draw();
@@ -443,7 +445,7 @@ function go(person) {
             if (person.target != -1){
                 who = "CPU" + person.target;
             }
-            alert(person.name + " recieved a " + num + " from " + who);
+            // alert(person.name + " recieved a " + num + " from " + who);
             status = person.name + " recieved a " + num + " from " + who;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             draw();
@@ -465,6 +467,8 @@ function go(person) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         draw();
         //sleep(500);
+        // break; // why is this even illegal????
+        //alert(person.name + " recieved a " + num + " from " + who);
         return;
     } else {
         var numSay1 = numWant;
@@ -488,14 +492,6 @@ function go(person) {
         } else if (num == 13) {
             numSay2 = "K";
         }
-        // DONT LET IT WORK UNTIL THEY PICK A NUM AND PERSONNAME
-        if (person.target == -1){
-            alert("You did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".");
-            status = "You did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".";
-        } else {
-            alert("CPU" + person.target + " did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".");
-            status = "CPU" + person.target + " did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".";
-        }
         var suit = SUITS[Math.floor(Math.random() * SUITS.length)];
         var card = new Card(Math.floor(Math.random() * 13) + 1, suit);
         person.recieveCard(card);
@@ -504,8 +500,17 @@ function go(person) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         draw();
         //sleep(500);
+        // break; // why is this illegal?!
+        if (person.target == -1){
+            //alert("You did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".");
+            status = "You did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".";
+        } else {
+            //alert("CPU" + person.target + " did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".");
+            status = "CPU" + person.target + " did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".";
+        }
         return;
     }
+    return;
 }
 
 function loadAllImgs() {
