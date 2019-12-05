@@ -7,7 +7,8 @@ var SUITS = ["hearts", "clubs", "diamonds", "spades"];
 var traits = []
 traits[0] = "IQ1000GOD";
 traits[1] = "BULLY";
-traits[2] = "veggie"; // asks whoever doesn't have the card they want for it
+traits[2] = "veggie"; 
+// asks whoever doesn't have the card they want for it
 
 
 var cards = [];
@@ -90,6 +91,7 @@ class Player {
     setCardAndTarg() {
         this.target = document.getElementById("target" + targetElem).value;
         this.cardNumWanted = document.getElementById("num").value;
+        status = "";
         play(this);
     }
     getTarget() {
@@ -164,6 +166,9 @@ class CPU {
         return this.points;
     }
     setTarget(card) {
+        if (CPUs.length==1){
+            this.target = -1;
+        }
         if (this.trait == "veggie") {
             if (!player.cardInHand(card)) {
                 this.target = -1;
@@ -189,6 +194,9 @@ class CPU {
                         }
                     }
                 }
+            }
+            if (this.target == null) {
+                this.target = Math.floor(Math.random() * 3);
             }
         }
         return this.target;
@@ -310,7 +318,7 @@ function checkPairs(hand, person) {
     } else {
         var escape = false;
         for (var i = 0; i < hand.length; i++) {
-            if (escape){
+            if (escape) {
                 break;
             }
             for (var j = (i + 1); j < hand.length; j++) {
@@ -330,81 +338,106 @@ function checkPairs(hand, person) {
                     person.points++;
                     escape = true;
                 }
-                if (escape){
+                if (escape) {
                     break;
                 }
-            } 
+            }
         }
         checkPairs(person.hand.hand, person);
     }
 }
 
 function play(player) {
-    // var winner = checkGame();
-    // while (!gameDone) {
-    //     if (winner != null){
-    //         gameDone = true;
-    //     }
-        document.getElementById("ask").style.display = 'block';
-        sleep(250);
-        console.log(player.name + " start go");
-        go(player);
-        player.refillHand();
-        for (var i = 0; i<CPUs.length; i++){
-            CPUs[i].refillHand();
+    var winner = checkGame();
+    if (winner != null) {
+        var cpuName = person.name;
+        if (person.name != "You"){
+            cpuName = "CPU" + (person.number+1);
         }
+        status = cpuName + " won the game!";
+        alert(status);
+        document.getElementById("ask").style.display = 'none';
+        return;
+    }
+    document.getElementById("ask").style.display = 'block';
+    sleep(250);
+    console.log(player.name + " start go");
+    go(player);
+    player.refillHand();
+    for (var i = 0; i < CPUs.length; i++) {
+        CPUs[i].refillHand();
+    }
+    sleep(250);
+    console.log(player.name + " done");
+    winner = checkGame();
+    if (winner != null) {
+        var cpuName = person.name;
+        if (person.name != "You"){
+            cpuName = "CPU" + (person.number+1);
+        }
+        status = cpuName + " won the game!";
+        alert(status);
+        document.getElementById("ask").style.display = 'none';
+        return;
+    }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    draw();
+    for (var i = 0; i < CPUs.length; i++) {
+        if (CPUs[i] == null) {
+            console.log("BAD");
+            break;
+        }
+        document.getElementById("ask").style.display = 'none';
         sleep(250);
-        console.log(player.name + " done");
-        // sleep(500);
-        winner = checkGame();
-        // sleep(500);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        draw();
-        for (var i = 0; i < CPUs.length; i++) {
-            if (CPUs[i] == null){
+        console.log(CPUs[i].name + " start go");
+        go(CPUs[i]);
+        player.refillHand();
+        for (var j = 0; i < CPUs.length; j++) {
+            if (CPUs[j] == null) {
                 console.log("BAD");
                 break;
             }
-            document.getElementById("ask").style.display = 'none';
-            //sleep(500);
-                // sketchy stuffs
-                // var go = new Promise(function(){go(CPUs[i]);},1000);
-                // go;
-            //setTimeout(function(){go(CPUs[i]);},1000);
-            sleep(250);
-            console.log(CPUs[i].name + " start go");
-            go(CPUs[i]);
-            player.refillHand();
-            for (var j = 0; i<CPUs.length; j++){
-                if (CPUs[j] == null){
-                    console.log("BAD");
-                    break;
-                }
-                CPUs[j].refillHand(); 
-                // WHY ALWAYS UNDEFINED?!?!?!
-                // WHAT THE HECK WHY IS THIS SO MESSED UP
-                // CALLED THE REFILL HAND
-                // BUT EVERYTHING PASSED IN IS UNDEF?
-                // WHY IS THIS HAPPENING?
-                // WHY IS CPUS[J] APPARENTLY UNDEFINED
-                // IT MAKES ABSOLUTELY NO SENSE
-                // I DONT SEE IT
-                // I BET DLO WOULD FIGURE IT OUT IN SECONDS
-                // I NEED CS SKILLS PLS DONATE 2%
-                // ID DO 90% BETTER IF I HAD JUST 2% UR SKILLS PLS
-            }
-            // sleep(500);
-            winner = checkGame();
-            // sleep(500);
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            draw();
-            sleep(250);
-            console.log(CPUs[i].name + " end");
+            CPUs[j].refillHand();
         }
-        document.getElementById("ask").style.display = 'block';
-         /////////sleep(500);
-//     }
-//     status = winner.name + " won the game!";
+        winner = checkGame();
+        if (winner != null) {
+            var cpuName = person.name;
+            if (person.name != "You"){
+                cpuName = "CPU" + (person.number+1);
+            }
+            status = cpuName + " won the game!";
+            alert(status);
+            document.getElementById("ask").style.display = 'none';
+            return;
+        }
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        draw();
+        sleep(250);
+        console.log(CPUs[i].name + " end");
+        winner = checkGame();
+        if (winner != null) {
+            var cpuName = person.name;
+            if (person.name != "You"){
+                cpuName = "CPU" + (person.number+1);
+            }
+            status = cpuName + " won the game!";
+            alert(status);
+            document.getElementById("ask").style.display = 'none';
+            return;
+        }
+    }
+    document.getElementById("ask").style.display = 'block';
+    winner = checkGame();
+    if (winner != null) {
+        var cpuName = person.name;
+        if (person.name != "You"){
+            cpuName = "CPU" + (person.number+1);
+        }
+        status = cpuName + " won the game!";
+        alert(status);
+        document.getElementById("ask").style.display = 'none';
+        return;
+    }
 }
 
 function sleep(milliseconds) {
@@ -419,30 +452,40 @@ function sleep(milliseconds) {
 
 function checkGame() {
     if (player.points >= 10) {
-        gameDone = true;
         return player;
-    }
-    for (var i = 0; i < CPUs.length; i++) {
-        if (CPUs[i].points >= 10) {
-            gameDone = true;
-            return CPU[i];
+    } else {
+        for (var i = 0; i < CPUs.length; i++) {
+            if (CPUs[i].points >= 10) {
+                return CPUs[i];
+            }
         }
     }
-    return;
+    return null;
 }
 
 function go(person) {
     var numWant, target;
+    var winner = checkGame();
+    if (winner != null) {
+        var cpuName = person.name;
+        if (person.name != "You"){
+            cpuName = "CPU" + (person.number+1);
+        }
+        status = cpuName + " won the game!";
+        alert(status);
+        document.getElementById("ask").style.display = 'none';
+        return;
+    }
     if (person.name == "You") {
         numWant = person.cardNumWanted;
         target = CPUs[person.target - 1];
     } else {
         numWant = person.getCardWanted();
         target = person.setTarget(numWant);
-        if (target == -1) {
+        if (person.setTarget(numWant) == -1) {
             target = player;
         } else {
-            target = CPUs[person.target - 1]; // IS THIS RIGHT?
+            target = CPUs[person.setTarget(numWant)];
         }
     }
     if (target.cardInHand(numWant)) {
@@ -457,17 +500,19 @@ function go(person) {
             num = "K";
         }
         if (person.name == "You") {
-            //alert("You recieved a " + num + " from CPU" + person.target);
-            status =  "You recieved a " + num + " from CPU" + person.target;
+            status = "You recieved " + num + " from CPU" + (target.number+1);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             draw();
         } else {
             var who = "you";
-            if (person.target != -1){
-                who = "CPU" + person.target;
+            if (person.target != -1) {
+                who = "CPU" + (target.number+1);
             }
-            // alert(person.name + " recieved a " + num + " from " + who);
-            status = person.name + " recieved a " + num + " from " + who;
+            var cpuName = person.name;
+            if (person.name != "you"){
+                cpuName = "CPU" + (person.number+1);
+            }
+            status += ", " + cpuName + " recieved " + num + " from " + who;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             draw();
         }
@@ -484,12 +529,19 @@ function go(person) {
         var card = new Card(num, suit);
         person.recieveCard(card);
         checkPairs(person.hand.hand, person);
-        //sleep(500);
+        winner = checkGame();
+        if (winner != null) {
+            var cpuName = person.name;
+            if (person.name != "You"){
+                cpuName = "CPU" + (person.number+1);
+            }
+            status = cpuName + " won the game!";
+            alert(status);
+            document.getElementById("ask").style.display = 'none';
+            return;
+        }
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         draw();
-        //sleep(500);
-        // break; // why is this even illegal????
-        //alert(person.name + " recieved a " + num + " from " + who);
         return;
     } else {
         var numSay1 = numWant;
@@ -514,20 +566,38 @@ function go(person) {
             numSay2 = "K";
         }
         var suit = SUITS[Math.floor(Math.random() * SUITS.length)];
-        var card = new Card(Math.floor(Math.random() * 13) + 1, suit);
+        var card = new Card(num, suit);
         person.recieveCard(card);
+        winner = checkGame();
+        if (winner != null) {
+            var cpuName = person.name;
+            if (person.name != "You"){
+                cpuName = "CPU" + (person.number+1);
+            }
+            status = cpuName + " won the game!";
+            alert(status);
+            document.getElementById("ask").style.display = 'none';
+            return;
+        }
         checkPairs(person.hand.hand, person);
-        //sleep(500);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         draw();
-        //sleep(500);
-        // break; // why is this illegal?!
-        if (person.target == -1){
-            //alert("You did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".");
-            status = "You did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".";
+        if (person.target == -1) {
+            var cpuName = person.name;
+            if (person.name != "you"){
+                cpuName = "CPU" + (person.number+1);
+            }
+            status += ", " + cpuName + " picked up " + numSay2 + " bc you don't have " + numSay1;
         } else {
-            //alert("CPU" + person.target + " did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".");
-            status = "CPU" + person.target + " did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".";
+            if (person.name == "You") {
+                status = "CPU" + (target.number+1) + " didn't have " + numSay1 + " so you picked up " + numSay2;
+            } else {
+                var cpuName = person.name;
+                if (person.name != "you"){
+                    cpuName = "CPU" + (person.number+1);
+                }
+                status += ", CPU" + (target.number+1) + " didn't have " + numSay1 + " so " + cpuName + " picked up " + numSay2;
+            }
         }
         return;
     }
@@ -602,7 +672,6 @@ function loadAllImgs() {
     img.src = "images/cards/spades" + "K" + ".png";
     cards['spades13'] = img;
 
-    // ACES - lol forgot them
     img = new Image();
     img.src = "images/cards/clubs" + "A" + ".png";
     cards['clubs1'] = img;
@@ -618,6 +687,17 @@ function loadAllImgs() {
 }
 
 function draw() {
+    winner = checkGame();
+    if (winner != null) {
+        var cpuName = person.name;
+        if (person.name != "You"){
+            cpuName = "CPU" + (person.number+1);
+        }
+        status = cpuName + " won the game!";
+        alert(status);
+        document.getElementById("ask").style.display = 'none';
+        return;
+    }
     ctx.fillStyle = '#870000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     var i = 10;
@@ -637,8 +717,7 @@ function draw() {
             if (c != null) {
                 var name = c.name;
                 var img = cards[c.name];
-                ctx.drawImage(img, x + i, 75, img.width / 4, img.height / 4);
-                //ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
+                ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
                 i += 25;
             }
         }
@@ -658,8 +737,7 @@ function draw() {
                 if (c != null) {
                     var name = c.name;
                     var img = cards[c.name];
-                    ctx.drawImage(img, x + i, 75, img.width / 4, img.height / 4);
-                    //ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
+                    ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
                     i += 25;
                 }
             }
@@ -686,8 +764,7 @@ function draw() {
                 if (c != null) {
                     var name = c.name;
                     var img = cards[c.name];
-                    ctx.drawImage(img, x + i, 75, img.width / 4, img.height / 4);
-                    // ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
+                    ctx.drawImage(cards['back'], x + i, 75, cards['back'].width / 6, cards['back'].height / 6)
                     i += 25;
                 }
             }
@@ -705,6 +782,6 @@ function draw() {
     ctx.font = "18px Times New Roman";
     ctx.fillStyle = "white";
     ctx.fillText("Points: " + player.points, 780, 728);
-    ctx.fillText(status, (canvas.width / 2)-status.length*5, 385);
+    ctx.fillText(status, (canvas.width / 2) - (status.length * 4), 385);
     window.requestAnimationFrame(draw);
 }
