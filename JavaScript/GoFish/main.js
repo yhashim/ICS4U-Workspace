@@ -429,7 +429,7 @@ function go(person) {
         if (target == -1) {
             target = player;
         } else {
-            target = CPUs[target - 1]; // IS THIS RIGHT?
+            target = CPUs[person.target - 1]; // IS THIS RIGHT?
         }
     }
     console.log(target);
@@ -447,6 +447,8 @@ function go(person) {
         if (person.name == "You") {
             //alert("You recieved a " + num + " from CPU" + person.target);
             status =  "You recieved a " + num + " from CPU" + person.target;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            draw();
         } else {
             var who = "you";
             if (person.target != -1){
@@ -454,6 +456,8 @@ function go(person) {
             }
             //alert(person.name + " recieved a " + num + " from " + who);
             status = person.name + " recieved a " + num + " from " + who;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            draw();
         }
         var suit = target.giveCard(numWant);
         if (num == "A") {
@@ -469,9 +473,10 @@ function go(person) {
         person.recieveCard(card);
         turnStart = false;
         checkPairs(person.hand.hand, person);
-        //sleep(500);
+        sleep(500);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         draw();
+        sleep(500);
         return;
     } else {
         var numSay1 = numWant;
@@ -508,9 +513,10 @@ function go(person) {
         person.recieveCard(card);
         turnStart = false;
         checkPairs(person.hand.hand, person);
-        //sleep(500);
+        sleep(500);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         draw();
+        sleep(500);
         return;
     }
 }
