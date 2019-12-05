@@ -23,7 +23,6 @@ var canvas, ctx;
 var backgroundImg;
 
 var gameDone = false;
-var turnStart;
 
 var player;
 var targetElem;
@@ -36,7 +35,6 @@ window.onload = function init() {
     ctx = canvas.getContext("2d");
     ctx.fillStyle = '#870000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    turnStart = false;
 }
 
 function begin(num) {
@@ -462,7 +460,6 @@ function go(person) {
         }
         var card = new Card(num, suit);
         person.recieveCard(card);
-        turnStart = false;
         checkPairs(person.hand.hand, person);
         //sleep(500);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -502,7 +499,6 @@ function go(person) {
         var suit = SUITS[Math.floor(Math.random() * SUITS.length)];
         var card = new Card(Math.floor(Math.random() * 13) + 1, suit);
         person.recieveCard(card);
-        turnStart = false;
         checkPairs(person.hand.hand, person);
         //sleep(500);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
