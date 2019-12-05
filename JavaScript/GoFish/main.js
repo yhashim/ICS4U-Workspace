@@ -177,10 +177,10 @@ class CPU {
     setTarget(card) {
         if (this.trait == "veggie") {
             if (!player.cardInHand(card)) {
-                this.target = 0;
+                this.target = -1;
             } else {
                 for (var i = 0; i < CPUs.length; i++) {
-                    if (i == this.CPUs[i].number) {
+                    if (i != this.number) {
                         if (!CPUs[i].cardInHand(card)) {
                             this.target = i;
                         }
@@ -188,13 +188,13 @@ class CPU {
                 }
             }
         } else if (this.trait == "BULLY") {
-            this.target = 0; // player
+            this.target = -1; // player
         } else if (this.trait == "IQ1000GOD") {
             if (player.cardInHand(card)) {
-                this.target = 0;
+                this.target = -1;
             } else {
                 for (var i = 0; i < CPUs.length; i++) {
-                    if (i == this.CPUs[i].number) {
+                    if (i != this.number) {
                         if (CPUs[i].cardInHand(card)) {
                             this.target = i;
                         }
@@ -332,7 +332,11 @@ function checkPairs(hand, person) {
     if (person.hasPairs() == false) {
         return false;
     } else {
+        var escape = false;
         for (var i = 0; i < hand.length; i++) {
+            if (escape){
+                break;
+            }
             for (var j = (i + 1); j < hand.length; j++) {
                 if (hand[i] != null && hand[j] != null && hand[i].number == hand[j].number) {
                     var newHand = new Hand();
@@ -350,9 +354,12 @@ function checkPairs(hand, person) {
                     person.points++;
                     //alert(person.name + " had a pair removed."); // DO SOMETHING SO THIS ALERT DOESNT HAPPEN BEFORE THE GAME LOADS 
                     console.log('YEAH!!!!!');
+                    escape = true;
+                }
+                if (escape){
                     break;
                 }
-            }
+            } 
         }
         checkPairs(person.hand.hand, person);
     }
@@ -363,17 +370,24 @@ function play(player) {
     while (!gameDone) {
         document.getElementById("ask").style.display = 'block';
         go(player);
-        sleep(1000);
+        // sleep(500);
         checkGame();
-        for (var i = 0; i < numPlayers; i++) {
+        // sleep(500);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        draw();
+        for (var i = 0; i < CPUs.length; i++) {
             document.getElementById("ask").style.display = 'none';
+            sleep(500);
             go(CPUs[i]);
-            sleep(1000);
+            // sleep(500);
             checkGame();
-            sleep(1000);
+            // sleep(500);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            draw();
         }
+        sleep(500);
     }
-    console.log(winner + " won the game!");
+    status = winner + " won the game!";
 }
 
 function sleep(milliseconds) {
@@ -408,10 +422,10 @@ function go(person) {
     } else {
         numWant = person.getCardWanted();
         target = person.setTarget(numWant);
-        if (target == 0) {
-            target = person;
+        if (target == -1) {
+            target = player;
         } else {
-            target = CPUs[target - 1];
+            target = CPUs[target - 1]; // IS THIS RIGHT?
         }
     }
     console.log(target);
@@ -427,9 +441,15 @@ function go(person) {
             num = "K";
         }
         if (person.name == "You") {
-            alert("CPU" + person.target + " had a " + num + ". You now have a " + num + ".");
+            //alert("You recieved a " + num + " from CPU" + person.target);
+            status =  "You recieved a " + num + " from CPU" + person.target;
         } else {
-            alert("CPU" + person.target + " had a " + num + ". " + person.name + " now has a " + num + ".");
+            var who = "you";
+            if (person.target != -1){
+                who = "CPU" + person.target;
+            }
+            //alert(person.name + " recieved a " + num + " from " + who);
+            status = person.name + " recieved a " + num + " from " + who;
         }
         var suit = target.giveCard(numWant);
         if (num == "A") {
@@ -445,8 +465,7 @@ function go(person) {
         person.recieveCard(card);
         turnStart = false;
         checkPairs(person.hand.hand, person);
-        status = "" + person + " recieved a " + num + " from " + target.name;
-        sleep(1000);
+        //sleep(500);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         draw();
         return;
@@ -473,14 +492,19 @@ function go(person) {
             numSay2 = "K";
         }
         // DONT LET IT WORK UNTIL THEY PICK A NUM AND PERSONNAME
-        alert("CPU" + person.target + " did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".");
+        if (person.target == -1){
+            //alert("You did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".");
+            status = "You did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".";
+        } else {
+            //alert("CPU" + person.target + " did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".");
+            status = "CPU" + person.target + " did not have a " + numSay1 + ". " + person.name + " picked up a " + numSay2 + ".";
+        }
         var suit = SUITS[Math.floor(Math.random() * SUITS.length)];
         var card = new Card(Math.floor(Math.random() * 13) + 1, suit);
         person.recieveCard(card);
         turnStart = false;
         checkPairs(person.hand.hand, person);
-        status = "" + person + " couldn't get a " + numSay2 + " and picked up a " + card.num;
-        sleep(1000);
+        //sleep(500);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         draw();
         return;
@@ -672,6 +696,6 @@ function draw() {
     //     ctx.textAlign = "center";
     //     ctx.fillText(status, (canvas.width/2)-20, 385);
     // }
-    ctx.fillText("GO FISH!", (canvas.width / 2) - 57, 385);
+    ctx.fillText(status, (canvas.width / 2) - 57, 385);
     window.requestAnimationFrame(draw);
 }
