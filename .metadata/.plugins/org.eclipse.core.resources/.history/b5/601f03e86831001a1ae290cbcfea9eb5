@@ -1,0 +1,48 @@
+package DynamicProgrammingAssignment;
+
+public class LongestZigZagSq {
+
+	static String[][] dynamicProgramming;
+	
+	public static void main(String[] args) {
+		int[] sequence = {14, 3, 2, 7, 5, 5};
+		dynamicProgramming = new String[3][sequence.length];
+			// num1, num2, ans (1 = pos, -1 = neg)
+		for (int i = 0; i<3; i++) {
+			for (int j = 0; j<dynamicProgramming.length; j++) {
+				dynamicProgramming[i][j] = null;
+			}
+		}
+		System.out.println(longestZigzagSq(sequence));
+	}
+
+	public static int longestZigzagSq(int[] array) {
+		if (array.length==0) {
+			return 0;
+		} else if (array.length==1) {
+			return 1;
+		} 
+		for (int i = 0; i<array.length; i++) {
+			for (int j = i+1; j<array.length; j++) {
+				int one = array[i], two = array[j];
+				int done = checkDP(one, two);
+			}
+		}
+	}
+	
+	public static int checkDP(int one, int two) {
+		for (int i = 0; i<dynamicProgramming.length-2; i++) {
+			for (int j = 0; j<dynamicProgramming[0].length; j++) {
+				if (dynamicProgramming[i][j]==null) {
+					return 0; // never before
+				} else if (Integer.parseInt(dynamicProgramming[i][j])==one
+						&& Integer.parseInt(dynamicProgramming[i+1][j])==two) {
+					return Integer.parseInt(dynamicProgramming[i+2][j]);
+					// pos/neg
+				}
+			}
+		}
+		return 0;
+	}
+
+}

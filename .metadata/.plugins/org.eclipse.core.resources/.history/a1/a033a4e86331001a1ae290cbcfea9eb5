@@ -1,0 +1,17 @@
+package DynamicProgrammingAssignment;
+
+public class LongestZigZagSq {
+
+	int[] pos, neg;
+	
+	public static void main(String[] args) {
+		int[] sequence = new int[] {14, 3, 2, 7, 5, 5};
+		pos = new int[sequence.length];
+		neg = new int[sequence.length];
+		for (int i = 0; i<sequence.length; i++) {
+			pos[i] = 1;
+			neg[i] = 1;
+		}
+	}
+
+}

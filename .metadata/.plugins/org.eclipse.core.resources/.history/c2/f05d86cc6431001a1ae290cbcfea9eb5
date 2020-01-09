@@ -1,0 +1,33 @@
+package DynamicProgrammingAssignment;
+
+public class LongestZigZagSq {
+
+	static int[] pos;
+	static int[] neg;
+	
+	public static void main(String[] args) {
+		int[] sequence = new int[] {14, 3, 2, 7, 5, 5};
+		pos = new int[sequence.length];
+		neg = new int[sequence.length];
+		for (int i = 0; i<sequence.length; i++) {
+			pos[i] = 1;
+			neg[i] = 1;
+		}
+	}
+	
+	public longestZigzagSq(array) {
+	    if array == []: 
+	        return 1
+	    n = len(array)
+	    pos = [1] * n
+	    neg = [1] * n
+	    for i in range(n):
+	        for j in range(i + 1, n):
+	            if array[j] > array[i]:
+	                pos[j] = max(pos[j], neg[i] + 1)
+	            elif array[j] < array[i]:
+	                neg[j] = max(neg[j], pos[i] + 1)
+	    return max(pos[-1], neg[-1])
+	}
+
+}

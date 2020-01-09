@@ -1,0 +1,12 @@
+package DynamicProgrammingAssignment;
+
+public class LongestZigZagSq {
+
+	int[] a1, a2;
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}
