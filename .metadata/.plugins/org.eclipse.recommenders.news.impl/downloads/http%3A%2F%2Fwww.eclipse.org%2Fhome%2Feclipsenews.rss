@@ -10,6 +10,22 @@
       <link>http://www.eclipse.org</link>
     </image>
     <item>
+      <title><![CDATA[The realities of running an open-source community]]></title>
+      <link><![CDATA[https://sdtimes.com/open-source/the-realities-of-running-an-open-source-community/]]></link>
+      <description><![CDATA[The benefits of using open-source software is immeasurable, but it’s not the code itself that makes open-source software an invaluable resource.]]></description>
+      <pubDate>Thu, 9 Jan 2020 09:45:00 EST</pubDate>
+      <category>news</category>
+      <pressrelease>0</pressrelease>
+    </item>
+    <item>
+      <title><![CDATA[Eclipse Foundation’s New Bylaws Are in Effect]]></title>
+      <link><![CDATA[https://www.eclipse.org/org/press-release/20200107-bylaws_release_3.php]]></link>
+      <description><![CDATA[We are pleased to announce the Eclipse Foundation’s new Bylaws went into effect on January 1, 2020.]]></description>
+      <pubDate>Tue, 7 Jan 2020 09:45:00 EST</pubDate>
+      <category>news</category>
+      <pressrelease>1</pressrelease>
+    </item>
+    <item>
       <title><![CDATA[Close to the Edge]]></title>
       <link><![CDATA[https://blogs.eclipse.org/post/mike-milinkovich/close-edge]]></link>
       <description><![CDATA[Today we are launching our new Edge Native Working Group to help drive the industry platform for edge computing.]]></description>
