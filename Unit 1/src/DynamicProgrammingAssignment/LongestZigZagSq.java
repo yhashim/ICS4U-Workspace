@@ -9,22 +9,20 @@ public class LongestZigZagSq {
 	static int length;
 	
 	public static void main(String[] args) {
-		int[] sequence = {10, 22, 9, 50, 31, 60};
+		int[] sequence = {10, 21, 31, 2, 413, 2};
 		diffs = new int[sequence.length-1];
 		for (int i = 0; i<diffs.length; i++) {
 			diffs[i] = sequence[i+1]-sequence[i];
 		}
-		if (diffs.length<=1) {
+		if (sequence.length==1) {
 			System.out.println(sequence.length);
-		} 
-		else if (diffs.length==2) {
+		} else if (sequence.length==2) {
 			if (diffs[0]!=0) {
 				System.out.println(2);
 			} else {
 				System.out.println(1);
 			}
-		} 
-		else {
+		} else {
 			System.out.println(longestZigZagSq(sequence)+2);
 		}
 	}
