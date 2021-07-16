@@ -110,4 +110,3 @@ const ages = [10, 20, 30, 40, 50];
 		const combined = ages.map(age => age*2).filter(age => age>=40).sort((a, b) => a-b).reduce((a, b) => a + b, 0);
 		// multiplies everything in ages by 2, filters out vals equal or over 40, sorts them in order low to high, gets the sum all elements
     
-© 2021 GitHub, Inc.
